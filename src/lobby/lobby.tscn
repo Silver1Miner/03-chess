@@ -63,14 +63,14 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="server_name" type="VBoxContainer" parent="CanvasLayer/VBoxContainer/Host"]
+[node name="server_info" type="VBoxContainer" parent="CanvasLayer/VBoxContainer/Host"]
 margin_right = 40.0
 margin_bottom = 40.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/Host/server_name"]
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/Host/server_info"]
 margin_right = 128.0
 margin_bottom = 14.0
 text = "Create Server"
@@ -79,43 +79,43 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label2" type="Label" parent="CanvasLayer/VBoxContainer/Host/server_name"]
+[node name="Label2" type="Label" parent="CanvasLayer/VBoxContainer/Host/server_info"]
 margin_top = 18.0
 margin_right = 128.0
 margin_bottom = 32.0
 text = "Server Name:"
 
-[node name="TextEdit" type="LineEdit" parent="CanvasLayer/VBoxContainer/Host/server_name"]
+[node name="server_name" type="LineEdit" parent="CanvasLayer/VBoxContainer/Host/server_info"]
 margin_top = 36.0
 margin_right = 128.0
 margin_bottom = 66.0
 rect_min_size = Vector2( 0, 30 )
 
-[node name="server_options" type="GridContainer" parent="CanvasLayer/VBoxContainer/Host/server_name"]
+[node name="server_options" type="GridContainer" parent="CanvasLayer/VBoxContainer/Host/server_info"]
 margin_top = 70.0
 margin_right = 128.0
 margin_bottom = 118.0
 columns = 2
 
-[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/Host/server_name/server_options"]
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/Host/server_info/server_options"]
 margin_right = 50.0
 margin_bottom = 14.0
 text = "Port"
 
-[node name="Label2" type="Label" parent="CanvasLayer/VBoxContainer/Host/server_name/server_options"]
+[node name="Label2" type="Label" parent="CanvasLayer/VBoxContainer/Host/server_info/server_options"]
 margin_left = 54.0
 margin_right = 128.0
 margin_bottom = 14.0
 text = "Players"
 
-[node name="TextEdit" type="TextEdit" parent="CanvasLayer/VBoxContainer/Host/server_name/server_options"]
+[node name="server_port" type="TextEdit" parent="CanvasLayer/VBoxContainer/Host/server_info/server_options"]
 margin_top = 18.0
 margin_right = 50.0
 margin_bottom = 48.0
 rect_min_size = Vector2( 50, 30 )
 text = "4546"
 
-[node name="SpinBox" type="SpinBox" parent="CanvasLayer/VBoxContainer/Host/server_name/server_options"]
+[node name="max_players" type="SpinBox" parent="CanvasLayer/VBoxContainer/Host/server_info/server_options"]
 margin_left = 54.0
 margin_top = 18.0
 margin_right = 128.0
@@ -124,7 +124,7 @@ min_value = 2.0
 max_value = 3.0
 value = 2.0
 
-[node name="Button" type="Button" parent="CanvasLayer/VBoxContainer/Host/server_name"]
+[node name="create_server_button" type="Button" parent="CanvasLayer/VBoxContainer/Host/server_info"]
 margin_top = 122.0
 margin_right = 128.0
 margin_bottom = 142.0
@@ -175,21 +175,22 @@ margin_right = 162.0
 margin_bottom = 14.0
 text = "Port"
 
-[node name="LineEdit" type="LineEdit" parent="CanvasLayer/VBoxContainer/Join/join_server/join_options"]
+[node name="ip_address" type="LineEdit" parent="CanvasLayer/VBoxContainer/Join/join_server/join_options"]
 margin_top = 18.0
 margin_right = 100.0
 margin_bottom = 42.0
 rect_min_size = Vector2( 100, 0 )
 text = "127.0.0.1"
 
-[node name="LineEdit2" type="LineEdit" parent="CanvasLayer/VBoxContainer/Join/join_server/join_options"]
+[node name="port" type="LineEdit" parent="CanvasLayer/VBoxContainer/Join/join_server/join_options"]
 margin_left = 104.0
 margin_top = 18.0
 margin_right = 162.0
 margin_bottom = 42.0
 text = "4546"
 
-[node name="Button" type="Button" parent="CanvasLayer/VBoxContainer/Join/join_server"]
+[node name="join_server_button" type="Button" parent="CanvasLayer/VBoxContainer/Join/join_server"]
 margin_top = 64.0
 margin_right = 162.0
 margin_bottom = 84.0
+text = "Join"
