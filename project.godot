@@ -8,6 +8,22 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "Resource",
+"class": "Grid",
+"language": "GDScript",
+"path": "res://src/world/board/Grid.gd"
+}, {
+"base": "Node2D",
+"class": "Unit",
+"language": "GDScript",
+"path": "res://src/world/units/unit.gd"
+} ]
+_global_script_class_icons={
+"Grid": "",
+"Unit": ""
+}
+
 [application]
 
 config/name="Three Kingdoms Chess"

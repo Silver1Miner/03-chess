@@ -1,0 +1,8 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://src/world/board/Grid.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+board_size = Vector2( 9, 9 )
+cell_size = Vector2( 64, 64 )
