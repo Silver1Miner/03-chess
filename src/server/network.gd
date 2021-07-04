@@ -3,7 +3,7 @@ extends Node
 signal server_created
 signal join_success
 signal join_fail
-#signal player_list_changed
+signal player_list_changed
 
 var server_info = {
 	server_name = "Server",
@@ -29,17 +29,29 @@ func create_server() -> void:
 	if server.listen(server_info.used_port, PoolStringArray(), true) != OK:
 		push_error("Failed to create server")
 		return
-	#if (server.create_server(server_info.used_port, server_info.max_players) != OK):
-	#	push_error("Failed to create server")
-	#	return
 	get_tree().set_network_peer(server)
 	emit_signal("server_created")
+	# register server's player in the local player list
+	register_player(Gamestate.player_info)
 
 func _on_player_connected(_id) -> void:
 	pass
 
-func _on_player_disconnected(_id) -> void:
-	pass
+func _on_player_disconnected(id):
+	print("Player ", players[id].player_name, " disconnected from server")
+	# update the player tables
+	if (get_tree().is_network_server()):
+		# unregister player from server list
+		unregister_player(id)
+		# unregister on all remaining peers
+		rpc("unregister_player", id)
+
+func _on_disconnected_from_server():
+	print("Disconnected from server")
+	# clear internal player list
+	players.clear()
+	# reset the player info network ID
+	Gamestate.player_info.net_id = 1
 
 func join_server(ip, port):
 	var client = WebSocketClient.new();
@@ -53,7 +65,34 @@ func join_server(ip, port):
 
 func _on_connected_to_server():
 	emit_signal("join_success")
+	# update player_info with obtained unique network ID
+	Gamestate.player_info.net_id = get_tree().get_network_unique_id()
+	# request server to register new player across all connected players
+	rpc_id(1, "register_player", Gamestate.player_info)
+	# register self on local list
+	register_player(Gamestate.player_info)
 
 func _on_connection_failed():
 	emit_signal("join_fail")
 	get_tree().set_network_peer(null)
+
+remote func register_player(pinfo):
+	if get_tree().is_network_server():
+		# server distributes player list throughout connected players
+		for id in players:
+			# Send currently iterated player info to the new player
+			rpc_id(pinfo.net_id, "register_player", players[id])
+			# Send new player info to currently iterated player, skipping server until later
+			if (id != 1):
+				rpc_id(id, "register_player", pinfo)
+	# executed on both client or server
+	print("Registering player ", pinfo.player_name, " (", pinfo.net_id, ") to internal player table")
+	players[pinfo.net_id] = pinfo      # create player entry in player list
+	emit_signal("player_list_changed") # notify that the player list has been changed
+
+remote func unregister_player(id):
+	print("Removing player ", players[id].player_name, " from internal table")
+	# remove player from list
+	players.erase(id)
+	# notify list has been changed
+	emit_signal("player_list_changed")

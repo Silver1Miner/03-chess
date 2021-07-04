@@ -46,7 +46,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="LineEdit" type="LineEdit" parent="CanvasLayer/VBoxContainer/Player/name"]
+[node name="name_edit" type="LineEdit" parent="CanvasLayer/VBoxContainer/Player/name"]
 margin_top = 18.0
 margin_right = 85.0
 margin_bottom = 42.0

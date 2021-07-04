@@ -1,5 +1,6 @@
 extends Control
 
+onready var player_name = $CanvasLayer/VBoxContainer/Player/name/name_edit
 onready var create_server_button = $CanvasLayer/VBoxContainer/Host/server_info/create_server_button
 onready var join_server_button = $CanvasLayer/VBoxContainer/Join/join_server/join_server_button
 onready var join_ip = $CanvasLayer/VBoxContainer/Join/join_server/join_options/ip_address
@@ -21,6 +22,10 @@ func _ready() -> void:
 	if join_server_button.connect("pressed", self, "_on_join_server_button_pressed") != OK:
 		push_error("join server button fail")
 
+func set_player_info():
+	if (!player_name.text.empty()):
+		Gamestate.player_info.player_name = player_name.text
+
 func _on_ready_to_play() -> void:
 	if get_tree().change_scene("res://src/world/world.tscn") != OK:
 		push_error("world change fail")
@@ -29,6 +34,7 @@ func _on_join_fail() -> void:
 	print("Failed to join server")
 
 func _on_create_server_button_pressed() -> void:
+	set_player_info()
 	if (!server_name.text.empty()):
 		Network.server_info.name = server_name.text
 	Network.server_info.max_players = int(max_players.value)
@@ -36,6 +42,7 @@ func _on_create_server_button_pressed() -> void:
 	Network.create_server()
 
 func _on_join_server_button_pressed() -> void:
+	set_player_info()
 	var port = int(join_port.text)
 	var ip = join_ip.text
 	Network.join_server(ip, port)
