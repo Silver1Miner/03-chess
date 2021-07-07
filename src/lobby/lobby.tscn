@@ -194,3 +194,13 @@ margin_top = 64.0
 margin_right = 162.0
 margin_bottom = 84.0
 text = "Join"
+
+[node name="back_main" type="Button" parent="CanvasLayer"]
+margin_left = 621.771
+margin_top = 42.2074
+margin_right = 755.771
+margin_bottom = 62.2074
+text = "Back to Main Menu"
+__meta__ = {
+"_edit_use_anchors_": false
+}

@@ -3,14 +3,23 @@ extends Node2D
 onready var player_name = $HUD/Label
 onready var hud_player_list = $HUD/playerlist
 
+export var grid: Resource = preload("res://src/world/board/Grid.tres")
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	if Network.connect("player_list_changed", self, "_on_player_list_changed") != OK:
 		push_error("player list change signal connect fail")
-	# display the local player name
+	if get_tree().is_network_server():
+		if Network.connect("player_removed", self, "_on_player_removed") != OK:
+			push_error("player remove signal connect fail")
+	# display local player name
 	player_name.text = Gamestate.player_info.player_name
+	if (get_tree().is_network_server()):
+		spawn_players(Gamestate.player_info, 1)
+	else:
+		rpc_id(1, "spawn_players", Gamestate.player_info, -1)
 
-func _on_player_list_changed():
+func _on_player_list_changed() -> void:
 	# remove all children from hud list
 	for c in hud_player_list.get_children():
 		c.queue_free()
@@ -20,3 +29,49 @@ func _on_player_list_changed():
 			var nlabel = Label.new()
 			nlabel.text = Network.players[p].player_name
 			hud_player_list.add_child(nlabel)
+
+func _on_player_removed(pinfo) -> void:
+	despawn_player(pinfo)
+
+remote func spawn_players(pinfo, spawn_index) -> void:
+	if (spawn_index == -1):
+		spawn_index = Network.players.size()
+	if (get_tree().is_network_server() && pinfo.net_id != 1):
+		var s_index = 1
+		for id in Network.players:
+			# Spawn currently iterated player in the new player's scene, skip new player for now
+			if (id != pinfo.net_id):
+				rpc_id(pinfo.net_id, "spawn_players", Network.players[id], s_index)
+			# Spawn new player within the currently iterated player as long it's not the server
+			# Because the server's list already contains the new player, that one will also get itself!
+			if (id != 1):
+				rpc_id(id, "spawn_players", pinfo, spawn_index)
+			s_index += 1
+	# Load the scene and create an instance
+	var pclass = load(pinfo.actor_path)
+	var nactor = pclass.instance()
+	# Setup player customization (well, the color)
+	nactor.set_dominant_color(pinfo.char_color)
+	# And the actor position
+	nactor.position = grid.calculate_map_position(pinfo.spawn_cell)
+	# If this actor does not belong to the server, change the node name and network master accordingly
+	if (pinfo.net_id != 1):
+		nactor.set_network_master(pinfo.net_id)
+	nactor.set_name(str(pinfo.net_id))
+	# Finally add the actor into the world
+	add_child(nactor)
+
+remote func despawn_player(pinfo) -> void:
+	if (get_tree().is_network_server()):
+		for id in Network.players:
+			# Skip disconnected player and server from replication
+			if (id == pinfo.net_id || id == 1):
+				continue
+			# Replicate despawn into currently iterated player
+			rpc_id(id, "despawn_player", pinfo)
+	# locate the player actor
+	var player_node = get_node(str(pinfo.net_id))
+	if (!player_node):
+		print("Cannoot remove invalid node from tree")
+		return
+	player_node.queue_free()

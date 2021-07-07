@@ -1,5 +1,6 @@
 extends Control
 
+onready var back_button = $CanvasLayer/back_main
 onready var player_name = $CanvasLayer/VBoxContainer/Player/name/name_edit
 onready var create_server_button = $CanvasLayer/VBoxContainer/Host/server_info/create_server_button
 onready var join_server_button = $CanvasLayer/VBoxContainer/Join/join_server/join_server_button
@@ -18,11 +19,17 @@ func _ready() -> void:
 	if Network.connect("join_fail", self, "_on_join_fail") != OK:
 		push_error("join signal connect fail")
 	if create_server_button.connect("pressed", self, "_on_create_server_button_pressed") != OK:
-		push_error("create server button fail")
+		push_error("create server button connect fail")
 	if join_server_button.connect("pressed", self, "_on_join_server_button_pressed") != OK:
-		push_error("join server button fail")
+		push_error("join server button connect fail")
+	if back_button.connect("pressed", self, "_on_back_button_pressed") != OK:
+		push_error("back button connect fail")
 
-func set_player_info():
+func _on_back_button_pressed() -> void:
+	if get_tree().change_scene("res://src/menu/menu.tscn") != OK:
+		push_error("main menu change fail")
+
+func set_player_info() -> void:
 	if (!player_name.text.empty()):
 		Gamestate.player_info.player_name = player_name.text
 

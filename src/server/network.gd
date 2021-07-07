@@ -4,6 +4,7 @@ signal server_created
 signal join_success
 signal join_fail
 signal player_list_changed
+signal player_removed(pinfo)
 
 var server_info = {
 	server_name = "Server",
@@ -12,7 +13,7 @@ var server_info = {
 }
 var players = {}
 
-func _ready():
+func _ready() -> void:
 	if get_tree().connect("network_peer_connected", self, "_on_player_connected") != OK:
 		push_error("network signal connect fail")
 	if get_tree().connect("network_peer_disconnected", self, "_on_player_disconnected") != OK:
@@ -37,23 +38,23 @@ func create_server() -> void:
 func _on_player_connected(_id) -> void:
 	pass
 
-func _on_player_disconnected(id):
+func _on_player_disconnected(id) -> void:
 	print("Player ", players[id].player_name, " disconnected from server")
 	# update the player tables
-	if (get_tree().is_network_server()):
+	if get_tree().is_network_server():
 		# unregister player from server list
 		unregister_player(id)
 		# unregister on all remaining peers
 		rpc("unregister_player", id)
 
-func _on_disconnected_from_server():
+func _on_disconnected_from_server() -> void:
 	print("Disconnected from server")
 	# clear internal player list
 	players.clear()
 	# reset the player info network ID
 	Gamestate.player_info.net_id = 1
 
-func join_server(ip, port):
+func join_server(ip, port) -> void:
 	var client = WebSocketClient.new();
 	var url = "ws://" + ip + ":" + str(port)
 	# "ws://" for WebSocket connections
@@ -63,7 +64,7 @@ func join_server(ip, port):
 		return
 	get_tree().set_network_peer(client);
 
-func _on_connected_to_server():
+func _on_connected_to_server() -> void:
 	emit_signal("join_success")
 	# update player_info with obtained unique network ID
 	Gamestate.player_info.net_id = get_tree().get_network_unique_id()
@@ -72,11 +73,11 @@ func _on_connected_to_server():
 	# register self on local list
 	register_player(Gamestate.player_info)
 
-func _on_connection_failed():
+func _on_connection_failed() -> void:
 	emit_signal("join_fail")
 	get_tree().set_network_peer(null)
 
-remote func register_player(pinfo):
+remote func register_player(pinfo) -> void:
 	if get_tree().is_network_server():
 		# server distributes player list throughout connected players
 		for id in players:
@@ -90,9 +91,10 @@ remote func register_player(pinfo):
 	players[pinfo.net_id] = pinfo      # create player entry in player list
 	emit_signal("player_list_changed") # notify that the player list has been changed
 
-remote func unregister_player(id):
+remote func unregister_player(id) -> void:
 	print("Removing player ", players[id].player_name, " from internal table")
-	# remove player from list
+	var pinfo = players[id]
 	players.erase(id)
 	# notify list has been changed
 	emit_signal("player_list_changed")
+	emit_signal("player_removed", pinfo)

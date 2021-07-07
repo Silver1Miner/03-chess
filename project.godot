@@ -27,6 +27,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Three Kingdoms Chess"
+run/main_scene="res://src/menu/menu.tscn"
 config/icon="res://icon.png"
 
 [autoload]
