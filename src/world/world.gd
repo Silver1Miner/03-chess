@@ -2,22 +2,26 @@ extends Node2D
 
 onready var player_name = $HUD/Label
 onready var hud_player_list = $HUD/playerlist
+onready var board = $board
 
 export var grid: Resource = preload("res://src/world/board/Grid.tres")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	if Network.connect("player_list_changed", self, "_on_player_list_changed") != OK:
-		push_error("player list change signal connect fail")
-	if get_tree().is_network_server():
-		if Network.connect("player_removed", self, "_on_player_removed") != OK:
-			push_error("player remove signal connect fail")
-	# display local player name
-	player_name.text = Gamestate.player_info.player_name
-	if (get_tree().is_network_server()):
-		spawn_players(Gamestate.player_info, 1)
+	if !Gamestate.is_singleplayer:
+		if Network.connect("player_list_changed", self, "_on_player_list_changed") != OK:
+			push_error("player list change signal connect fail")
+		if get_tree().is_network_server():
+			if Network.connect("player_removed", self, "_on_player_removed") != OK:
+				push_error("player remove signal connect fail")
+		# display local player name
+		player_name.text = Gamestate.player_info.player_name
+		if (get_tree().is_network_server()):
+			spawn_players(Gamestate.player_info, 1)
+		else:
+			rpc_id(1, "spawn_players", Gamestate.player_info, -1)
 	else:
-		rpc_id(1, "spawn_players", Gamestate.player_info, -1)
+		spawn_singleplayer()
 
 func _on_player_list_changed() -> void:
 	# remove all children from hud list
@@ -50,7 +54,8 @@ remote func spawn_players(pinfo, spawn_index) -> void:
 	# Load the scene and create an instance
 	var pclass = load(pinfo.actor_path)
 	var nactor = pclass.instance()
-	# Setup player customization (well, the color)
+	nactor.is_singleplayer = false
+	# Setup player the color
 	nactor.set_dominant_color(pinfo.char_color)
 	# And the actor position
 	nactor.position = grid.calculate_map_position(pinfo.spawn_cell)
@@ -59,7 +64,7 @@ remote func spawn_players(pinfo, spawn_index) -> void:
 		nactor.set_network_master(pinfo.net_id)
 	nactor.set_name(str(pinfo.net_id))
 	# Finally add the actor into the world
-	add_child(nactor)
+	board.add_child(nactor)
 
 remote func despawn_player(pinfo) -> void:
 	if (get_tree().is_network_server()):
@@ -72,6 +77,13 @@ remote func despawn_player(pinfo) -> void:
 	# locate the player actor
 	var player_node = get_node(str(pinfo.net_id))
 	if (!player_node):
-		print("Cannoot remove invalid node from tree")
+		print("Cannot remove invalid node from tree")
 		return
 	player_node.queue_free()
+
+func spawn_singleplayer() -> void:
+	var pclass = load("res://src/world/player/player.tscn")
+	var nactor = pclass.instance()
+	nactor.is_singleplayer = true
+	nactor.position = Vector2(0, 0)
+	board.add_child(nactor)

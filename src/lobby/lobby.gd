@@ -41,6 +41,7 @@ func _on_join_fail() -> void:
 	print("Failed to join server")
 
 func _on_create_server_button_pressed() -> void:
+	Gamestate.is_singleplayer = false
 	set_player_info()
 	if (!server_name.text.empty()):
 		Network.server_info.name = server_name.text
@@ -49,6 +50,7 @@ func _on_create_server_button_pressed() -> void:
 	Network.create_server()
 
 func _on_join_server_button_pressed() -> void:
+	Gamestate.is_singleplayer = false
 	set_player_info()
 	var port = int(join_port.text)
 	var ip = join_ip.text

@@ -16,9 +16,12 @@ func _ready():
 		push_error("quit button connect fail")
 
 func _on_singleplayer() -> void:
-	pass
+	Gamestate.is_singleplayer = true
+	if get_tree().change_scene("res://src/world/world.tscn") != OK:
+		push_error("change scene fail")
 
 func _on_multiplayer() -> void:
+	Gamestate.is_singleplayer = false
 	if get_tree().change_scene("res://src/lobby/lobby.tscn") != OK:
 		push_error("change scene fail")
 

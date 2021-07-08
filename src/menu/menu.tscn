@@ -1,11 +1,30 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://src/menu/menu.gd" type="Script" id=1]
 [ext_resource path="res://assets/menu_art.png" type="Texture" id=2]
+[ext_resource path="res://assets/fonts/go3v2.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://assets/fonts/NotoSerifTC-SemiBold.otf" type="DynamicFontData" id=4]
+[ext_resource path="res://assets/fonts/NotoSerifTC-Bold.otf" type="DynamicFontData" id=5]
+
+[sub_resource type="DynamicFont" id=1]
+size = 24
+font_data = ExtResource( 4 )
+
+[sub_resource type="Theme" id=2]
+default_font = SubResource( 1 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 72
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 72
+font_data = ExtResource( 5 )
 
 [node name="menu" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme = SubResource( 2 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -20,29 +39,55 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="title" type="Label" parent="."]
+margin_left = 17.2305
+margin_top = 104.882
+margin_right = 1024.23
+margin_bottom = 186.882
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Chess of the Three Kingdoms"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="subtitle" type="Label" parent="."]
+margin_left = 185.041
+margin_top = 175.302
+margin_right = 473.041
+margin_bottom = 279.302
+custom_fonts/font = SubResource( 4 )
+custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "三國象棋"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 margin_left = 196.431
 margin_top = 338.984
 margin_right = 285.431
 margin_bottom = 430.984
-custom_constants/separation = 16
+custom_constants/separation = 32
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="singleplayer" type="Button" parent="VBoxContainer"]
-margin_right = 89.0
-margin_bottom = 20.0
-text = "Singleplayer"
+margin_right = 263.0
+margin_bottom = 41.0
+text = "Hotseat Multiplayer"
 
 [node name="multiplayer" type="Button" parent="VBoxContainer"]
-margin_top = 36.0
-margin_right = 89.0
-margin_bottom = 56.0
-text = "Multiplayer"
+margin_top = 73.0
+margin_right = 263.0
+margin_bottom = 114.0
+text = "Network Multiplayer"
 
 [node name="quit" type="Button" parent="VBoxContainer"]
-margin_top = 72.0
-margin_right = 89.0
-margin_bottom = 92.0
+margin_top = 146.0
+margin_right = 263.0
+margin_bottom = 187.0
 text = "Quit"

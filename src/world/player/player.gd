@@ -3,6 +3,7 @@ extends Node2D
 signal accept_pressed(cell)
 signal moved(new_cell)
 
+export var is_singleplayer := true
 export var grid: Resource = preload("res://src/world/board/Grid.tres")
 export var ui_cooldown := 0.1
 var cell := Vector2.ZERO setget set_cell
@@ -24,7 +25,10 @@ func set_cell(input: Vector2) -> void:
 	emit_signal("moved", cell)
 
 func _unhandled_input(event) -> void:
-	if is_network_master():
+	if is_singleplayer or is_network_master():
+		if event is InputEventMouseMotion:
+			if event.position.x > 0 and event.position.x < (64 * 9) and event.position.y > 0 and event.position.y < (64 * 9):
+				self.cell = grid.calculate_grid_coordinates(event.position)
 		if event.is_action_pressed("ui_accept"):
 			emit_signal("accept_pressed", cell)
 			get_tree().set_input_as_handled()
@@ -35,13 +39,14 @@ func _unhandled_input(event) -> void:
 			return
 		if event.is_action("ui_right"):
 			self.cell += Vector2.RIGHT
-		elif event.is_action("ui_up"):
-			self.cell += Vector2.UP
 		elif event.is_action("ui_left"):
 			self.cell += Vector2.LEFT
+		if event.is_action("ui_up"):
+			self.cell += Vector2.UP
 		elif event.is_action("ui_down"):
 			self.cell += Vector2.DOWN
-		rset("repl_cell", self.cell)
+		if !is_singleplayer:
+			rset("repl_cell", self.cell)
 	else:
 		set_cell(repl_cell)
 

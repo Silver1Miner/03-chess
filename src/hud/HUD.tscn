@@ -3,7 +3,9 @@
 [node name="HUD" type="CanvasLayer"]
 
 [node name="Label" type="Label" parent="."]
-margin_right = 40.0
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -81.0
 margin_bottom = 14.0
 text = "Player Name"
 __meta__ = {
@@ -11,9 +13,14 @@ __meta__ = {
 }
 
 [node name="playerlist" type="VBoxContainer" parent="."]
-margin_top = 40.0
-margin_right = 40.0
-margin_bottom = 80.0
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -116.959
+margin_top = -675.129
+margin_right = -17.9595
+margin_bottom = -606.129
 __meta__ = {
 "_edit_use_anchors_": false
 }

@@ -1,5 +1,6 @@
 extends Node
 
+var is_singleplayer := true
 var player_info = {
 	player_name = "Player",
 	net_id = 1,
@@ -7,6 +8,9 @@ var player_info = {
 	char_color = Color(1, 1, 1),
 	spawn_cell = Vector2(0, 0)
 }
+
+var whose_turn := 1 # 1 blue 2 red 3 green
+var turn_count := 1
 
 
 # Called when the node enters the scene tree for the first time.
