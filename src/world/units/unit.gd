@@ -10,11 +10,13 @@ puppet var repl_cell = Vector2.ZERO
 onready var _anim_player: AnimationPlayer = $AnimationPlayer
 
 export var piece_type = "officer"
-export var team = 1 # 1 blue 2 red 3 green
+export var team = "blue"
+var piece_name = "officer_blue"
 var movable_cells := []
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	piece_name = piece_type + "_" + team
 	set_cell(grid.calculate_grid_coordinates(position))
 	position = grid.calculate_map_position(cell)
 
@@ -31,6 +33,12 @@ func set_is_selected(value: bool) -> void:
 		#_anim_player.play("idle")
 
 func move_along_path(_path: PoolVector2Array) -> void:
+	pass
+
+func set_sprite_western() -> void:
+	pass
+
+func set_sprite_eastern() -> void:
 	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
