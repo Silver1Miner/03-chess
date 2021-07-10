@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Unit",
+"class": "Bishop",
+"language": "GDScript",
+"path": "res://src/world/units/bishop/bishop.gd"
+}, {
 "base": "Resource",
 "class": "Grid",
 "language": "GDScript",
@@ -20,6 +25,7 @@ _global_script_classes=[ {
 "path": "res://src/world/units/unit.gd"
 } ]
 _global_script_class_icons={
+"Bishop": "",
 "Grid": "",
 "Unit": ""
 }
