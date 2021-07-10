@@ -38,11 +38,9 @@ func set_cell(value: Vector2) -> void:
 func set_is_selected(value: bool) -> void:
 	is_selected = value
 	if is_selected:
-		pass
-		#_anim_player.play("selected")
+		_anim_player.play("selected")
 	else:
-		pass
-		#_anim_player.play("idle")
+		_anim_player.play("idle")
 
 func move_along_path(path: PoolVector2Array) -> void:
 	if path.empty():
@@ -73,6 +71,9 @@ func _process(delta):
 		position = grid.calculate_map_position(cell)
 		_path.curve.clear_points()
 		emit_signal("move_finished")
+
+func find_moves() -> void:
+	pass
 
 func test_walk() -> void:
 	var points := [

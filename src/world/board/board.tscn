@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://assets/board/metal.png" type="Texture" id=1]
 [ext_resource path="res://assets/board/marble.png" type="Texture" id=2]
@@ -19,6 +19,7 @@
 [ext_resource path="res://src/world/units/pawn/pawn_green.tscn" type="PackedScene" id=17]
 [ext_resource path="res://src/world/units/pawn/pawn_red.tscn" type="PackedScene" id=18]
 [ext_resource path="res://src/world/units/king/king_green.tscn" type="PackedScene" id=19]
+[ext_resource path="res://src/world/board/move_display.tscn" type="PackedScene" id=20]
 
 [sub_resource type="TileSet" id=1]
 0/name = "marble.png 0"
@@ -173,5 +174,4 @@ position = Vector2( 544, 416 )
 [node name="rook_blue4" parent="units" instance=ExtResource( 15 )]
 position = Vector2( 544, 544 )
 
-[node name="move_display" type="TileMap" parent="."]
-format = 1
+[node name="move_display" parent="." instance=ExtResource( 20 )]
