@@ -11,4 +11,3 @@ func draw(cells) -> void:
 	clear()
 	for c in cells:
 		set_cellv(c, 0)
-	pass

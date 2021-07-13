@@ -8,9 +8,10 @@ var player_info = {
 	char_color = Color(1, 1, 1),
 	spawn_cell = Vector2(0, 0)
 }
+var style = "W"
 
 var whose_turn := 1 # 1 blue 2 red 3 green
-var turn_count := 1
+var round_count := 1
 
 
 # Called when the node enters the scene tree for the first time.

@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://src/world/units/unit.tscn" type="PackedScene" id=1]
 [ext_resource path="res://assets/pieces/pawn/piece-wei-bu.png" type="Texture" id=2]
+[ext_resource path="res://src/world/units/pawn/pawn_blue.gd" type="Script" id=3]
 
 [sub_resource type="Curve2D" id=1]
 _data = {
@@ -9,7 +10,7 @@ _data = {
 }
 
 [node name="pawn_blue" instance=ExtResource( 1 )]
-piece_type = "pawn"
+script = ExtResource( 3 )
 
 [node name="Path2D" parent="." index="1"]
 curve = SubResource( 1 )

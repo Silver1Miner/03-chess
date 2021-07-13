@@ -2,12 +2,15 @@ extends Node2D
 
 onready var units := $units
 onready var move_display := $move_display
+onready var player = $player
 
 var board_state := []
 var board_display := []
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	if player:
+		player.connect("accept_pressed", self, "_on_accept_pressed")
 	initialize_board_state()
 	populate_state_from_board()
 
@@ -26,11 +29,14 @@ func populate_state_from_board() -> void:
 		board_state[x][y] = unit
 		board_display[x][y] = unit.piece_name
 
+func _on_accept_pressed(cell, team) -> void:
+	print(cell, team)
+
 func populate_board_from_state() -> void:
 	pass
 
-func calculate_piece_movement() -> void:
-	pass
+func calculate_piece_movement(cell: Vector2) -> void:
+	print(cell)
 
 func _unhandled_input(event) -> void:
 	if event.is_action_pressed("ui_cancel"): # DEBUGGING

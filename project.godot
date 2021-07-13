@@ -9,11 +9,6 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "Unit",
-"class": "Bishop",
-"language": "GDScript",
-"path": "res://src/world/units/bishop/bishop.gd"
-}, {
 "base": "Resource",
 "class": "Grid",
 "language": "GDScript",
@@ -30,7 +25,6 @@ _global_script_classes=[ {
 "path": "res://src/world/board/move_display.gd"
 } ]
 _global_script_class_icons={
-"Bishop": "",
 "Grid": "",
 "Unit": "",
 "UnitPath": ""
@@ -53,6 +47,14 @@ window/size/width=1280
 window/size/height=720
 window/stretch/mode="2d"
 window/stretch/aspect="keep"
+
+[input]
+
+left_click={
+"deadzone": 0.5,
+"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
+ ]
+}
 
 [physics]
 

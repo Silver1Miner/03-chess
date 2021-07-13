@@ -1,9 +1,11 @@
 extends Node2D
 class_name Unit
+# Unit: position, piece type, team
 
 export var east_sprite = preload("res://assets/pieces/piece-blue.png")
-export var west_sprite = preload("res://assets/pieces/rook/image_part_066.png")
+export var west_sprite = preload("res://assets/pieces/king/image_part_066.png")
 export var grid: Resource = preload("res://src/world/board/Grid.tres")
+
 var cell := Vector2.ZERO setget set_cell
 var is_selected := false setget set_is_selected
 var _is_walking := false setget _set_is_walking
@@ -16,8 +18,12 @@ onready var _path: Path2D = $Path2D
 onready var _path_follow: PathFollow2D = $Path2D/PathFollow2D
 onready var sprite: Sprite = $Path2D/PathFollow2D/Sprite
 
-export var piece_type = "officer"
+onready var board = get_parent().get_parent()
+onready var move_display = board.move_display
+
+export var piece_type = "officer" setget set_type
 export var team = "blue"
+
 var piece_name = "officer_blue"
 var movable_cells := []
 
@@ -26,7 +32,6 @@ signal move_finished
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	set_process(false)
-	piece_name = piece_type + "_" + team
 	set_cell(grid.calculate_grid_coordinates(position))
 	position = grid.calculate_map_position(cell)
 	if not Engine.editor_hint:
@@ -35,12 +40,27 @@ func _ready():
 func set_cell(value: Vector2) -> void:
 	cell = grid.clamp(value)
 
+func get_cell() -> Vector2:
+	return cell
+
+func set_type(value: String) -> void:
+	piece_type = value
+	piece_name = piece_type + "_ " + team
+
+func get_type() -> String:
+	return piece_type
+
+func get_team() -> String:
+	return team
+
 func set_is_selected(value: bool) -> void:
 	is_selected = value
 	if is_selected:
 		_anim_player.play("selected")
+		move_display.draw(movable_cells)
 	else:
 		_anim_player.play("idle")
+		move_display.clear()
 
 func move_along_path(path: PoolVector2Array) -> void:
 	if path.empty():
@@ -50,6 +70,12 @@ func move_along_path(path: PoolVector2Array) -> void:
 		_path.curve.add_point(grid.calculate_map_position(point) - position)
 	cell = path[-1]
 	self._is_walking = true
+
+func set_sprite_style() -> void:
+	if Gamestate.style == "W":
+		set_sprite_western()
+	elif Gamestate.style == "E":
+		set_sprite_eastern()
 
 func set_sprite_western() -> void:
 	sprite.scale = Vector2(0.5, 0.5)
@@ -71,9 +97,6 @@ func _process(delta):
 		position = grid.calculate_map_position(cell)
 		_path.curve.clear_points()
 		emit_signal("move_finished")
-
-func find_moves() -> void:
-	pass
 
 func test_walk() -> void:
 	var points := [

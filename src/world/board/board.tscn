@@ -1,8 +1,8 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://assets/board/metal.png" type="Texture" id=1]
 [ext_resource path="res://assets/board/marble.png" type="Texture" id=2]
-[ext_resource path="res://src/world/units/officer/officer_blue.tscn" type="PackedScene" id=3]
+[ext_resource path="res://src/world/units/queen/queen_blue.tscn" type="PackedScene" id=3]
 [ext_resource path="res://src/world/board/board.gd" type="Script" id=4]
 [ext_resource path="res://src/world/units/rook/rook_blue.tscn" type="PackedScene" id=5]
 [ext_resource path="res://src/world/units/pawn/pawn_blue.tscn" type="PackedScene" id=6]
@@ -20,6 +20,7 @@
 [ext_resource path="res://src/world/units/pawn/pawn_red.tscn" type="PackedScene" id=18]
 [ext_resource path="res://src/world/units/king/king_green.tscn" type="PackedScene" id=19]
 [ext_resource path="res://src/world/board/move_display.tscn" type="PackedScene" id=20]
+[ext_resource path="res://src/world/player/player.tscn" type="PackedScene" id=21]
 
 [sub_resource type="TileSet" id=1]
 0/name = "marble.png 0"
@@ -63,10 +64,10 @@ tile_data = PoolIntArray( 0, 0, 0, 1, 1, 0, 2, 0, 0, 3, 1, 0, 4, 0, 0, 5, 1, 0, 
 
 [node name="units" type="Node2D" parent="."]
 
-[node name="officer_blue" parent="units" instance=ExtResource( 3 )]
+[node name="queen_blue" parent="units" instance=ExtResource( 3 )]
 position = Vector2( 224, 32 )
 
-[node name="officer_blue2" parent="units" instance=ExtResource( 3 )]
+[node name="queen_blue2" parent="units" instance=ExtResource( 3 )]
 position = Vector2( 352, 32 )
 
 [node name="rook_blue" parent="units" instance=ExtResource( 5 )]
@@ -175,3 +176,6 @@ position = Vector2( 544, 416 )
 position = Vector2( 544, 544 )
 
 [node name="move_display" parent="." instance=ExtResource( 20 )]
+
+[node name="player" parent="." instance=ExtResource( 21 )]
+position = Vector2( 288, 288 )

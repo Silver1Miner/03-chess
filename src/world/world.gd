@@ -82,8 +82,9 @@ remote func despawn_player(pinfo) -> void:
 	player_node.queue_free()
 
 func spawn_singleplayer() -> void:
-	var pclass = load("res://src/world/player/player.tscn")
-	var nactor = pclass.instance()
-	nactor.is_singleplayer = true
-	nactor.position = Vector2(0, 0)
-	board.add_child(nactor)
+	pass
+	#var pclass = load("res://src/world/player/player.tscn")
+	#var nactor = pclass.instance()
+	#nactor.is_singleplayer = true
+	#nactor.position = Vector2(0, 0)
+	#board.add_child(nactor)
