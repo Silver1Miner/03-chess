@@ -5,5 +5,5 @@ func _ready():
 	west_sprite = preload("res://assets/pieces/king/image_part_054.png")
 	set_sprite_style()
 	piece_type = "king"
-	team = "blue"
+	team = "green"
 	piece_name = piece_type + "_" + team

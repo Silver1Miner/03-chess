@@ -19,7 +19,6 @@ onready var _path_follow: PathFollow2D = $Path2D/PathFollow2D
 onready var sprite: Sprite = $Path2D/PathFollow2D/Sprite
 
 onready var board = get_parent().get_parent()
-onready var move_display = board.move_display
 
 export var piece_type = "officer" setget set_type
 export var team = "blue"
@@ -57,10 +56,8 @@ func set_is_selected(value: bool) -> void:
 	is_selected = value
 	if is_selected:
 		_anim_player.play("selected")
-		move_display.draw(movable_cells)
 	else:
 		_anim_player.play("idle")
-		move_display.clear()
 
 func move_along_path(path: PoolVector2Array) -> void:
 	if path.empty():
