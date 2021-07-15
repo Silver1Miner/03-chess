@@ -8,7 +8,9 @@ onready var player = $player
 
 var board_state := []
 var board_display := []
+
 var selected_piece = null
+var moves := []
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -22,7 +24,7 @@ func initialize_board_state() -> void:
 		board_state.append([])
 		board_display.append([])
 		for _y in range(9):
-			board_state[x].append("")
+			board_state[x].append(null)
 			board_display[x].append("")
 
 func populate_state_from_board() -> void:
@@ -33,13 +35,31 @@ func populate_state_from_board() -> void:
 		board_display[x][y] = unit.piece_name
 
 func _on_accept_pressed(cell, team) -> void:
+	if selected_piece != null:
+		if cell in moves:
+			print("move ", selected_piece.piece_name, " to ", cell)
+			move_from_to(selected_piece.cell, cell)
+		selected_piece = null
+		move_display.clear()
+		return
 	if board_display[cell.x][cell.y] != "":
-		if team == board_state[cell.x][cell.y].get_team():
+		print(board_state[cell.x][cell.y])
+		if team == board_state[cell.x][cell.y].team:
 			selected_piece = board_state[cell.x][cell.y]
 			calculate_piece_movement(cell)
 	else:
 		selected_piece = null
 		move_display.clear()
+
+func move_from_to(start_cell, end_cell) -> void:
+	board_state[start_cell.x][start_cell.y].move_along_path([start_cell, end_cell])
+	board_display[start_cell.x][start_cell.y] = ""
+	board_display[end_cell.x][end_cell.y] = board_state[start_cell.x][start_cell.y].piece_name
+	if board_state[end_cell.x][end_cell.y] != null:
+		print(board_state[end_cell.x][end_cell.y].piece_name, " captured at ", end_cell)
+		board_state[end_cell.x][end_cell.y].queue_free()
+	board_state[end_cell.x][end_cell.y] = board_state[start_cell.x][start_cell.y]
+	board_state[start_cell.x][start_cell.y] = null
 
 func calculate_piece_movement(cell: Vector2) -> void:
 	print(board_state[cell.x][cell.y].piece_name)
@@ -61,9 +81,19 @@ func _unhandled_input(event) -> void:
 	if event.is_action_pressed("ui_cancel"): # DEBUGGING
 		print(board_display)
 		get_tree().set_input_as_handled()
+	if event.is_action_pressed("ui_focus_next"):
+		if player.team == "blue":
+			player.set_team("red")
+			print("Red's turn")
+		elif player.team == "red":
+			player.set_team("green")
+			print("Green's turn")
+		else:
+			player.set_team("blue")
+			print("Blue's turn")
 
 func calculate_king_move(cell: Vector2) -> void:
-	var moves = []
+	moves = []
 	var possible = [Vector2(-1,-1), Vector2(-1,0),
 	Vector2(-1,1), Vector2(0,-1), Vector2(0,1),
 	Vector2(1,-1), Vector2(1,0), Vector2(1,1)]
@@ -78,7 +108,7 @@ func calculate_king_move(cell: Vector2) -> void:
 	print("king moves: ", moves)
 
 func calculate_bishop_move(cell: Vector2) -> void:
-	var moves = []
+	moves = []
 	var possible = [Vector2(-1,-1), Vector2(1,1),
 	Vector2(-1,1), Vector2(1,-1)]
 	for p in possible:
@@ -96,7 +126,7 @@ func calculate_bishop_move(cell: Vector2) -> void:
 	print("bishop moves: ", moves)
 
 func calculate_knight_move(cell: Vector2) -> void:
-	var moves = []
+	moves = []
 	var possible = [Vector2(-2,-1), Vector2(-2,1),
 	Vector2(-1,2), Vector2(1,2), Vector2(2,1),
 	Vector2(2,-1), Vector2(-1,-2), Vector2(1,-2)]
@@ -111,7 +141,7 @@ func calculate_knight_move(cell: Vector2) -> void:
 	print("knight moves: ", moves)
 
 func calculate_pawn_move(cell: Vector2) -> void:
-	var moves = []
+	moves = []
 	var possible_cap = [Vector2(-1, 1), Vector2(1, 1)]
 	var possible_mov = Vector2(0, 1)
 	if board_state[cell.x][cell.y].team != "blue":
@@ -129,7 +159,7 @@ func calculate_pawn_move(cell: Vector2) -> void:
 	print("pawn moves: ", moves)
 
 func calculate_queen_move(cell: Vector2) -> void:
-	var moves = []
+	moves = []
 	var possible = [Vector2(-1,-1), Vector2(-1,0),
 	Vector2(-1,1), Vector2(0,-1), Vector2(0,1),
 	Vector2(1,-1), Vector2(1,0), Vector2(1,1)]
@@ -144,7 +174,7 @@ func calculate_queen_move(cell: Vector2) -> void:
 	print("queen moves: ", moves)
 
 func calculate_rook_move(cell: Vector2) -> void:
-	var moves = []
+	moves = []
 	var possible = [Vector2(0,-1), Vector2(0,1),
 	Vector2(-1,0), Vector2(1,0)]
 	for p in possible:

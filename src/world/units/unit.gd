@@ -9,7 +9,7 @@ export var grid: Resource = preload("res://src/world/board/Grid.tres")
 var cell := Vector2.ZERO setget set_cell
 var is_selected := false setget set_is_selected
 var _is_walking := false setget _set_is_walking
-export var move_speed := 200.0
+export var move_speed := 600.0
 
 puppet var repl_cell = Vector2.ZERO
 
