@@ -44,7 +44,7 @@ func get_cell() -> Vector2:
 
 func set_type(value: String) -> void:
 	piece_type = value
-	piece_name = piece_type + "_ " + team
+	piece_name = piece_type + "_" + team
 
 func get_type() -> String:
 	return piece_type
@@ -58,6 +58,19 @@ func set_is_selected(value: bool) -> void:
 		_anim_player.play("selected")
 	else:
 		_anim_player.play("idle")
+
+func change_to_queen() -> void:
+	set_type("queen")
+	if team == "red":
+		east_sprite = preload("res://assets/pieces/queen/piece-shu-shuai.png")
+		west_sprite = preload("res://assets/pieces/queen/image_part_035.png")
+	elif team == "blue":
+		east_sprite = preload("res://assets/pieces/queen/piece-wei-jiang.png")
+		west_sprite = preload("res://assets/pieces/queen/image_part_065.png")
+	else:
+		east_sprite = preload("res://assets/pieces/queen/piece-wu-du.png")	
+		west_sprite = preload("res://assets/pieces/queen/image_part_053.png")
+	set_sprite_style()
 
 func move_along_path(path: PoolVector2Array) -> void:
 	if path.empty():

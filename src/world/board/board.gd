@@ -60,6 +60,14 @@ func move_from_to(start_cell, end_cell) -> void:
 		board_state[end_cell.x][end_cell.y].queue_free()
 	board_state[end_cell.x][end_cell.y] = board_state[start_cell.x][start_cell.y]
 	board_state[start_cell.x][start_cell.y] = null
+	if board_state[end_cell.x][end_cell.y].piece_type == "pawn":
+		if board_state[end_cell.x][end_cell.y].team == "blue" and end_cell.y > 5:
+			board_state[end_cell.x][end_cell.y].change_to_queen()
+		elif board_state[end_cell.x][end_cell.y].team == "red" and end_cell.y < 3:
+			board_state[end_cell.x][end_cell.y].change_to_queen()
+		elif board_state[end_cell.x][end_cell.y].team == "green" and end_cell.y < 3:
+			board_state[end_cell.x][end_cell.y].change_to_queen()
+	next_turn()
 
 func calculate_piece_movement(cell: Vector2) -> void:
 	print(board_state[cell.x][cell.y].piece_name)
@@ -82,15 +90,18 @@ func _unhandled_input(event) -> void:
 		print(board_display)
 		get_tree().set_input_as_handled()
 	if event.is_action_pressed("ui_focus_next"):
-		if player.team == "blue":
-			player.set_team("red")
-			print("Red's turn")
-		elif player.team == "red":
-			player.set_team("green")
-			print("Green's turn")
-		else:
-			player.set_team("blue")
-			print("Blue's turn")
+		next_turn()
+
+func next_turn() -> void:
+	if player.team == "blue":
+		player.set_team("red")
+		print("Red's turn")
+	elif player.team == "red":
+		player.set_team("green")
+		print("Green's turn")
+	else:
+		player.set_team("blue")
+		print("Blue's turn")
 
 func calculate_king_move(cell: Vector2) -> void:
 	moves = []

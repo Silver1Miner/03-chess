@@ -86,8 +86,14 @@ margin_right = 263.0
 margin_bottom = 114.0
 text = "Network Multiplayer"
 
-[node name="quit" type="Button" parent="VBoxContainer"]
+[node name="settings" type="Button" parent="VBoxContainer"]
 margin_top = 146.0
 margin_right = 263.0
 margin_bottom = 187.0
+text = "Settings"
+
+[node name="quit" type="Button" parent="VBoxContainer"]
+margin_top = 219.0
+margin_right = 263.0
+margin_bottom = 260.0
 text = "Quit"

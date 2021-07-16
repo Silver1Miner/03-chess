@@ -18,6 +18,7 @@ onready var board = get_parent()
 func _ready():
 	_timer.wait_time = ui_cooldown
 	set_cell(grid.calculate_grid_coordinates(position))
+	position = grid.calculate_map_position(cell)
 
 func set_cell(input: Vector2) -> void:
 	var new_cell: Vector2 = grid.clamp(input)
