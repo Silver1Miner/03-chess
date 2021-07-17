@@ -8,16 +8,24 @@ onready var player = $player
 
 var board_state := []
 var board_display := []
+var prev_board_state := []
+var prev_board_display := []
 
 var selected_piece = null
 var moves := []
+var currently_attacked_by_blue := []
+var currently_attacked_by_red := []
+var currently_attacked_by_green := []
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	if player:
 		player.connect("accept_pressed", self, "_on_accept_pressed")
+		player.connect("cancel_pressed", self, "_on_cancel_pressed")
+		player.connect("moved", self, "_on_player_moved")
 	initialize_board_state()
 	populate_state_from_board()
+	calculate_current_attacked_squares()
 
 func initialize_board_state() -> void:
 	for x in range(9):
@@ -35,12 +43,18 @@ func populate_state_from_board() -> void:
 		board_display[x][y] = unit.piece_name
 
 func _on_accept_pressed(cell, team) -> void:
+	print(team, " pressed select at ", cell)
 	if selected_piece != null:
 		if cell in moves:
 			print("move ", selected_piece.piece_name, " to ", cell)
+			move_display.clear()
 			move_from_to(selected_piece.cell, cell)
-		selected_piece = null
-		move_display.clear()
+		elif board_display[cell.x][cell.y] == "":
+			selected_piece = null
+			move_display.clear()
+		elif team == board_state[cell.x][cell.y].team:
+			selected_piece = board_state[cell.x][cell.y]
+			calculate_piece_movement(cell)
 		return
 	if board_display[cell.x][cell.y] != "":
 		print(board_state[cell.x][cell.y])
@@ -49,7 +63,32 @@ func _on_accept_pressed(cell, team) -> void:
 			calculate_piece_movement(cell)
 	else:
 		selected_piece = null
-		move_display.clear()
+		move_display.clear_moves()
+
+func _on_cancel_pressed(cell, team) -> void:
+	print(team, " pressed cancel at ", cell)
+	var attacks = []
+	var piece = board_state[cell.x][cell.y]
+	if piece == null:
+		move_display.clear_moves()
+		return
+	match piece.piece_type:
+		"king":
+			attacks = units.calculate_king_attacks(piece.cell)
+		"bishop":
+			attacks = units.calculate_bishop_attacks(piece.cell)
+		"knight":
+			attacks = units.calculate_knight_attacks(piece.cell)
+		"pawn":
+			attacks = units.calculate_pawn_attacks(piece.cell)
+		"queen":
+			attacks = units.calculate_queen_attacks(piece.cell)
+		"rook":
+			attacks = units.calculate_rook_attacks(piece.cell)
+	move_display.draw_attacked(attacks)
+
+func _on_player_moved(cell, team) -> void:
+	print(team, " moved cursor to ", cell)
 
 func move_from_to(start_cell, end_cell) -> void:
 	board_state[start_cell.x][start_cell.y].move_along_path([start_cell, end_cell])
@@ -67,28 +106,65 @@ func move_from_to(start_cell, end_cell) -> void:
 			board_state[end_cell.x][end_cell.y].change_to_queen()
 		elif board_state[end_cell.x][end_cell.y].team == "green" and end_cell.y < 3:
 			board_state[end_cell.x][end_cell.y].change_to_queen()
+	calculate_current_attacked_squares()
+	check()
 	next_turn()
 
 func calculate_piece_movement(cell: Vector2) -> void:
+	moves.clear()
 	print(board_state[cell.x][cell.y].piece_name)
 	match board_state[cell.x][cell.y].piece_type:
 		"king":
-			calculate_king_move(cell)
+			moves = units.calculate_king_move(cell, board_state[cell.x][cell.y].team)
 		"bishop":
-			calculate_bishop_move(cell)
+			moves = units.calculate_bishop_move(cell)
 		"knight":
-			calculate_knight_move(cell)
+			moves = units.calculate_knight_move(cell)
 		"pawn":
-			calculate_pawn_move(cell)
+			moves = units.calculate_pawn_move(cell)
 		"queen":
-			calculate_queen_move(cell)
+			moves = units.calculate_queen_move(cell)
 		"rook":
-			calculate_rook_move(cell)
+			moves = units.calculate_rook_move(cell)
+	move_display.draw_moves(moves)
+	print(board_state[cell.x][cell.y].piece_type, " moves: ", moves)
+
+func calculate_current_attacked_squares() -> void:
+	currently_attacked_by_blue.clear()
+	currently_attacked_by_red.clear()
+	currently_attacked_by_green.clear()
+	for piece in units.get_children():
+		var attacks = []
+		match piece.piece_type:
+			"king":
+				attacks = units.calculate_king_attacks(piece.cell)
+			"bishop":
+				attacks = units.calculate_bishop_attacks(piece.cell)
+			"knight":
+				attacks = units.calculate_knight_attacks(piece.cell)
+			"pawn":
+				attacks = units.calculate_pawn_attacks(piece.cell)
+			"queen":
+				attacks = units.calculate_queen_attacks(piece.cell)
+			"rook":
+				attacks = units.calculate_rook_attacks(piece.cell)
+		match piece.team:
+			"blue":
+				for move in attacks:
+					if not move in currently_attacked_by_blue:
+						currently_attacked_by_blue.append(move)
+			"red":
+				for move in attacks:
+					if not move in currently_attacked_by_red:
+						currently_attacked_by_red.append(move)
+			"green":
+				for move in attacks:
+					if not move in currently_attacked_by_green:
+						currently_attacked_by_green.append(move)
 
 func _unhandled_input(event) -> void:
-	if event.is_action_pressed("ui_cancel"): # DEBUGGING
+	if event.is_action_pressed("ui_home"): # DEBUGGING
 		print(board_display)
-		get_tree().set_input_as_handled()
 	if event.is_action_pressed("ui_focus_next"):
 		next_turn()
 
@@ -103,101 +179,31 @@ func next_turn() -> void:
 		player.set_team("blue")
 		print("Blue's turn")
 
-func calculate_king_move(cell: Vector2) -> void:
-	moves = []
-	var possible = [Vector2(-1,-1), Vector2(-1,0),
-	Vector2(-1,1), Vector2(0,-1), Vector2(0,1),
-	Vector2(1,-1), Vector2(1,0), Vector2(1,1)]
-	for p in possible:
-		var new_cell = cell + p
-		if grid.is_within_bounds(new_cell):
-			if board_display[new_cell.x][new_cell.y] == "":
-				moves.append(new_cell)
-			elif board_state[new_cell.x][new_cell.y].team != board_state[cell.x][cell.y].team:
-				moves.append(new_cell)
-	move_display.draw(moves)
-	print("king moves: ", moves)
-
-func calculate_bishop_move(cell: Vector2) -> void:
-	moves = []
-	var possible = [Vector2(-1,-1), Vector2(1,1),
-	Vector2(-1,1), Vector2(1,-1)]
-	for p in possible:
-		for i in range(1,9):
-			var new_cell = cell + p * i
-			if grid.is_within_bounds(new_cell):
-				if board_display[new_cell.x][new_cell.y] == "":
-					moves.append(new_cell)
-				elif board_state[new_cell.x][new_cell.y].team != board_state[cell.x][cell.y].team:
-					moves.append(new_cell)
-					break
-				else:
-					break
-	move_display.draw(moves)
-	print("bishop moves: ", moves)
-
-func calculate_knight_move(cell: Vector2) -> void:
-	moves = []
-	var possible = [Vector2(-2,-1), Vector2(-2,1),
-	Vector2(-1,2), Vector2(1,2), Vector2(2,1),
-	Vector2(2,-1), Vector2(-1,-2), Vector2(1,-2)]
-	for p in possible:
-		var new_cell = cell + p
-		if grid.is_within_bounds(new_cell):
-			if board_display[new_cell.x][new_cell.y] == "":
-				moves.append(new_cell)
-			elif board_state[new_cell.x][new_cell.y].team != board_state[cell.x][cell.y].team:
-				moves.append(new_cell)
-	move_display.draw(moves)
-	print("knight moves: ", moves)
-
-func calculate_pawn_move(cell: Vector2) -> void:
-	moves = []
-	var possible_cap = [Vector2(-1, 1), Vector2(1, 1)]
-	var possible_mov = Vector2(0, 1)
-	if board_state[cell.x][cell.y].team != "blue":
-		possible_cap = [Vector2(-1, -1), Vector2(1, -1)]
-		possible_mov = Vector2(0, -1)
-	var new_cell = cell + possible_mov
-	if grid.is_within_bounds(new_cell) and board_display[new_cell.x][new_cell.y] == "":
-		moves.append(new_cell)
-	for p in possible_cap:
-		new_cell = cell + p
-		if grid.is_within_bounds(new_cell) and board_display[new_cell.x][new_cell.y] != "":
-			if board_state[new_cell.x][new_cell.y].team != board_state[cell.x][cell.y].team:
-				moves.append(new_cell)
-	move_display.draw(moves)
-	print("pawn moves: ", moves)
-
-func calculate_queen_move(cell: Vector2) -> void:
-	moves = []
-	var possible = [Vector2(-1,-1), Vector2(-1,0),
-	Vector2(-1,1), Vector2(0,-1), Vector2(0,1),
-	Vector2(1,-1), Vector2(1,0), Vector2(1,1)]
-	for p in possible:
-		var new_cell = cell + p
-		if grid.is_within_bounds(new_cell):
-			if board_display[new_cell.x][new_cell.y] == "":
-				moves.append(new_cell)
-			elif board_state[new_cell.x][new_cell.y].team != board_state[cell.x][cell.y].team:
-				moves.append(new_cell)
-	move_display.draw(moves)
-	print("queen moves: ", moves)
-
-func calculate_rook_move(cell: Vector2) -> void:
-	moves = []
-	var possible = [Vector2(0,-1), Vector2(0,1),
-	Vector2(-1,0), Vector2(1,0)]
-	for p in possible:
-		for i in range(1,9):
-			var new_cell = cell + p * i
-			if grid.is_within_bounds(new_cell):
-				if board_display[new_cell.x][new_cell.y] == "":
-					moves.append(new_cell)
-				elif board_state[new_cell.x][new_cell.y].team != board_state[cell.x][cell.y].team:
-					moves.append(new_cell)
-					break
-				else:
-					break
-	move_display.draw(moves)
-	print("rook moves: ", moves)
+func check() -> void:
+	var blue_checks = []
+	for sq in currently_attacked_by_blue:
+		if board_display[sq.x][sq.y] == "king_red":
+			print("Red in check")
+			blue_checks.append(sq)
+		if board_display[sq.x][sq.y] == "king_green":
+			print("Green in check")
+			blue_checks.append(sq)
+	move_display.add_draw_attacked(blue_checks)
+	var red_checks = []
+	for sq in currently_attacked_by_red:
+		if board_display[sq.x][sq.y] == "king_blue":
+			print("Blue in check")
+			red_checks.append(sq)
+		if board_display[sq.x][sq.y] == "king_green":
+			print("Green in check")
+			red_checks.append(sq)
+	move_display.add_draw_attacked(red_checks)
+	var green_checks = []
+	for sq in currently_attacked_by_green:
+		if board_display[sq.x][sq.y] == "king_red":
+			print("Red in check")
+			green_checks.append(sq)
+		if board_display[sq.x][sq.y] == "king_blue":
+			print("Blue in check")
+			green_checks.append(sq)
+	move_display.add_draw_attacked(green_checks)

@@ -1,6 +1,7 @@
 extends Node2D
 
 signal accept_pressed(cell, team)
+signal cancel_pressed(cell, team)
 signal moved(new_cell, team)
 
 export var is_singleplayer := true
@@ -11,14 +12,19 @@ export var team = "blue" setget set_team
 var cell := Vector2.ZERO setget set_cell
 puppet var repl_cell = Vector2.ZERO
 
+onready var _sprite: Sprite = $Sprite
 onready var _timer: Timer = $Timer
-onready var board = get_parent()
+var board_position := Vector2(0, 0)
+var colors := {"blue": Color(0.5,0.5,1), "red": Color(1,0.5,0.5), "green": Color(0.5,1,0.5)}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	_timer.wait_time = ui_cooldown
 	set_cell(grid.calculate_grid_coordinates(position))
 	position = grid.calculate_map_position(cell)
+	if not get_parent() is Viewport:
+		board_position = get_parent().position
+	set_team(team)
 
 func set_cell(input: Vector2) -> void:
 	var new_cell: Vector2 = grid.clamp(input)
@@ -30,14 +36,18 @@ func set_cell(input: Vector2) -> void:
 
 func set_team(input: String) -> void:
 	team = input
+	_sprite.modulate = colors[team]
 
 func _unhandled_input(event) -> void:
 	if is_singleplayer or is_network_master():
-		if event is InputEventMouseMotion and not board is Viewport:
-			if (event.position - board.position).x > 0 and (event.position - board.position).x < (64 * 9) and (event.position - board.position).y > 0 and (event.position - board.position).y < (64 * 9):
-				self.cell = grid.calculate_grid_coordinates(event.position - board.position)
+		if event is InputEventMouseMotion:
+			if grid.is_within_bounds(grid.calculate_grid_coordinates(event.position-board_position)):
+				self.cell = grid.calculate_grid_coordinates(event.position - board_position)
 		if event.is_action_pressed("ui_accept") or event.is_action_pressed("left_click"):
 			emit_signal("accept_pressed", cell, team)
+			get_tree().set_input_as_handled()
+		if event.is_action_pressed("ui_cancel") or event.is_action_pressed("right_click"):
+			emit_signal("cancel_pressed", cell, team)
 			get_tree().set_input_as_handled()
 		var should_move = event.is_pressed()
 		if event.is_echo():
@@ -57,11 +67,8 @@ func _unhandled_input(event) -> void:
 	else:
 		set_cell(repl_cell)
 
-func _draw() -> void:
-	draw_rect(Rect2(-grid.cell_size / 2, grid.cell_size), Color.aliceblue, false, 2.0)
-
-func set_dominant_color(color):
-	$Sprite.modulate = color
+#func _draw() -> void:
+#	draw_rect(Rect2(-grid.cell_size / 2, grid.cell_size), colors[team], false, 2.0)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):

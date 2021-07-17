@@ -55,8 +55,6 @@ remote func spawn_players(pinfo, spawn_index) -> void:
 	var pclass = load(pinfo.actor_path)
 	var nactor = pclass.instance()
 	nactor.is_singleplayer = false
-	# Setup player the color
-	nactor.set_dominant_color(pinfo.char_color)
 	# And the actor position
 	nactor.position = grid.calculate_map_position(pinfo.spawn_cell)
 	# If this actor does not belong to the server, change the node name and network master accordingly
