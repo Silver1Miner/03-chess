@@ -40,6 +40,7 @@ config/icon="res://icon.png"
 
 Gamestate="*res://src/server/gamestate.tscn"
 Network="*res://src/server/network.tscn"
+Music="*res://src/sound/Music.tscn"
 
 [display]
 

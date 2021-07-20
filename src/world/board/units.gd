@@ -36,7 +36,7 @@ func calculate_bishop_move(cell: Vector2) -> Array:
 			if grid.is_within_bounds(new_cell):
 				if board.board_state[new_cell.x][new_cell.y] == null and board.would_not_end_in_check(cell, new_cell):
 					moves.append(new_cell)
-				elif board.board_state[new_cell.x][new_cell.y].team != board.board_state[cell.x][cell.y].team and board.would_not_end_in_check(cell, new_cell):
+				elif board.board_state[new_cell.x][new_cell.y] != null and board.board_state[new_cell.x][new_cell.y].team != board.board_state[cell.x][cell.y].team and board.would_not_end_in_check(cell, new_cell):
 					moves.append(new_cell)
 					break
 				else:
@@ -127,7 +127,7 @@ func calculate_bishop_attacks(cell: Vector2) -> Array:
 			if grid.is_within_bounds(new_cell):
 				if board.board_state[new_cell.x][new_cell.y] == null:
 					attacks.append(new_cell)
-				elif board.board_state[new_cell.x][new_cell.y].piece_type == "king" and board.board_state[new_cell.x][new_cell.y].team != board.board_state[cell.x][cell.y].team:
+				elif board.board_state[new_cell.x][new_cell.y].piece_type == "king" and board.board_state[cell.x][cell.y] != null and board.board_state[new_cell.x][new_cell.y].team != board.board_state[cell.x][cell.y].team:
 					attacks.append(new_cell)
 				else:
 					attacks.append(new_cell)

@@ -10,6 +10,8 @@ onready var server_name = $CanvasLayer/VBoxContainer/Host/server_info/server_nam
 onready var server_port = $CanvasLayer/VBoxContainer/Host/server_info/server_options/server_port
 onready var max_players = $CanvasLayer/VBoxContainer/Host/server_info/server_options/max_players
 
+onready var hud_player_list = $CanvasLayer/player_list
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	if Network.connect("server_created", self, "_on_ready_to_play") != OK:
@@ -18,6 +20,8 @@ func _ready() -> void:
 		push_error("join signal connect fail")
 	if Network.connect("join_fail", self, "_on_join_fail") != OK:
 		push_error("join signal connect fail")
+	if Network.connect("player_list_changed", self, "_on_player_list_changed") != OK:
+		push_error("player list change signal connect fail")
 	if create_server_button.connect("pressed", self, "_on_create_server_button_pressed") != OK:
 		push_error("create server button connect fail")
 	if join_server_button.connect("pressed", self, "_on_join_server_button_pressed") != OK:
@@ -34,6 +38,9 @@ func set_player_info() -> void:
 		Gamestate.player_info.player_name = player_name.text
 
 func _on_ready_to_play() -> void:
+	print("ready to play")
+
+func start_game() -> void:
 	if get_tree().change_scene("res://src/world/world.tscn") != OK:
 		push_error("world change fail")
 
@@ -55,3 +62,18 @@ func _on_join_server_button_pressed() -> void:
 	var port = int(join_port.text)
 	var ip = join_ip.text
 	Network.join_server(ip, port)
+
+func _on_player_list_changed() -> void:
+	# remove all children from hud list
+	for c in hud_player_list.get_children():
+		c.queue_free()
+	# iterate through player list creating new entries
+	for p in Network.players:
+		if (p != Gamestate.player_info.net_id):
+			var nlabel = Label.new()
+			nlabel.text = Network.players[p].player_name
+			hud_player_list.add_child(nlabel)
+
+func _unhandled_input(event: InputEvent) -> void: # DEBUGGING
+	if event.is_action_pressed("ui_cancel"):
+		print(Network.players)

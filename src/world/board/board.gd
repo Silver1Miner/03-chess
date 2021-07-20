@@ -191,9 +191,11 @@ func next_turn() -> void:
 		player.set_team("blue")
 		current_turn = "blue"
 		print("Blue's turn")
+	check()
 	endgame_state = checkmate_stalemate_checker()
 
 func check() -> void:
+	move_display.clear_attacked()
 	var blue_checks = []
 	for sq in currently_attacked_by_blue:
 		if board_state[sq.x][sq.y] != null and board_state[sq.x][sq.y].piece_name == "king_red":
@@ -234,7 +236,7 @@ func would_not_end_in_check(cell, new_cell) -> bool:
 	var prev_state = board_state.duplicate(true)
 	board_state[cell.x][cell.y].cell = new_cell
 	if board_state[new_cell.x][new_cell.y] != null:
-		board_state[new_cell.x][new_cell.y].cell = null
+		board_state[new_cell.x][new_cell.y].cell = Vector2(100,100)
 	board_state[new_cell.x][new_cell.y] = board_state[cell.x][cell.y]
 	board_state[cell.x][cell.y] = null
 	calculate_current_attacked_squares()

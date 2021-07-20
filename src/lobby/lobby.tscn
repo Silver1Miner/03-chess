@@ -6,9 +6,9 @@
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 1.12372
-margin_top = 0.0708313
+margin_top = -0.820068
 margin_right = 1.12378
-margin_bottom = 0.0708008
+margin_bottom = -0.820068
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -195,12 +195,35 @@ margin_right = 162.0
 margin_bottom = 84.0
 text = "Join"
 
+[node name="Panel" type="Panel" parent="CanvasLayer"]
+margin_left = 301.124
+margin_top = 50.0708
+margin_right = 801.124
+margin_bottom = 550.071
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="back_main" type="Button" parent="CanvasLayer"]
-margin_left = 621.771
-margin_top = 42.2074
-margin_right = 755.771
-margin_bottom = 62.2074
+margin_left = 697.366
+margin_top = 15.1191
+margin_right = 831.366
+margin_bottom = 35.1191
 text = "Back to Main Menu"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="player_list" type="VBoxContainer" parent="CanvasLayer"]
+margin_left = 338.541
+margin_top = 78.3991
+margin_right = 378.541
+margin_bottom = 118.399
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="CanvasLayer/player_list"]
+margin_right = 46.0
+margin_bottom = 14.0
+text = "Testing"

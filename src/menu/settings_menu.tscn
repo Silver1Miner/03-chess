@@ -1,0 +1,10 @@
+[gd_scene format=2]
+
+[node name="settings_menu" type="Panel"]
+margin_left = 100.0
+margin_top = 300.0
+margin_right = 800.0
+margin_bottom = 650.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
