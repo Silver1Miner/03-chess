@@ -8,7 +8,8 @@ var player_info = {
 	char_color = Color(1, 1, 1),
 	spawn_cell = Vector2(0, 0)
 }
-var style = "W"
+var style = "W" # W or E
+var board = "marble" # marble, wood, land
 
 var whose_turn := 1 # 1 blue 2 red 3 green
 var round_count := 1

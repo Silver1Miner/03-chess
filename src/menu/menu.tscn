@@ -31,20 +31,19 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TextureRect" type="TextureRect" parent="."]
-anchor_right = 1.0
-anchor_bottom = 1.0
+[node name="menu_art" type="TextureRect" parent="."]
+margin_right = 1280.0
+margin_bottom = 720.0
 texture = ExtResource( 2 )
-expand = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="title" type="Label" parent="."]
-margin_left = 17.2305
-margin_top = 104.882
-margin_right = 1024.23
-margin_bottom = 186.882
+margin_left = 100.0
+margin_top = 100.0
+margin_right = 1107.0
+margin_bottom = 182.0
 custom_fonts/font = SubResource( 3 )
 custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -66,7 +65,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="options" type="VBoxContainer" parent="."]
 margin_left = 196.431
 margin_top = 338.984
 margin_right = 285.431
@@ -76,24 +75,24 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="singleplayer" type="Button" parent="VBoxContainer"]
+[node name="singleplayer" type="Button" parent="options"]
 margin_right = 263.0
 margin_bottom = 41.0
 text = "Hotseat Multiplayer"
 
-[node name="multiplayer" type="Button" parent="VBoxContainer"]
+[node name="multiplayer" type="Button" parent="options"]
 margin_top = 73.0
 margin_right = 263.0
 margin_bottom = 114.0
 text = "Network Multiplayer"
 
-[node name="settings" type="Button" parent="VBoxContainer"]
+[node name="settings" type="Button" parent="options"]
 margin_top = 146.0
 margin_right = 263.0
 margin_bottom = 187.0
 text = "Settings"
 
-[node name="quit" type="Button" parent="VBoxContainer"]
+[node name="quit" type="Button" parent="options"]
 margin_top = 219.0
 margin_right = 263.0
 margin_bottom = 260.0
@@ -101,3 +100,22 @@ text = "Quit"
 
 [node name="settings_menu" parent="." instance=ExtResource( 6 )]
 visible = false
+
+[node name="copyright" type="Label" parent="."]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -389.0
+margin_top = -35.0
+text = "Copyright © 2021 Jack Anderson"
+
+[node name="version" type="Label" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -83.0
+margin_bottom = 35.0
+text = "v 0.1.0 "
+__meta__ = {
+"_edit_use_anchors_": false
+}

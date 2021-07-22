@@ -59,20 +59,23 @@ func calculate_knight_move(cell: Vector2) -> Array:
 
 func calculate_pawn_move(cell: Vector2) -> Array:
 	var moves = []
-	var possible_cap = [Vector2(-1, 1), Vector2(1, 1)]
+	#var possible_cap = [Vector2(-1, 1), Vector2(1, 1)]
 	var possible_mov = Vector2(0, 1)
 	if board.board_state[cell.x][cell.y].team != "blue":
-		possible_cap = [Vector2(-1, -1), Vector2(1, -1)]
+		#possible_cap = [Vector2(-1, -1), Vector2(1, -1)]
 		possible_mov = Vector2(0, -1)
 	var new_cell = cell + possible_mov
 	if grid.is_within_bounds(new_cell) and board.would_not_end_in_check(cell, new_cell):
 		if board.board_state[new_cell.x][new_cell.y] == null:
 			moves.append(new_cell)
-	for p in possible_cap:
-		new_cell = cell + p
-		if grid.is_within_bounds(new_cell) and board.would_not_end_in_check(cell, new_cell):
-			if board.board_state[new_cell.x][new_cell.y] != null and board.board_state[new_cell.x][new_cell.y].team != board.board_state[cell.x][cell.y].team:
+		# capture and move same version
+		elif board.board_state[new_cell.x][new_cell.y].team != board.board_state[cell.x][cell.y].team:
 				moves.append(new_cell)
+	#for p in possible_cap:
+	#	new_cell = cell + p
+	#	if grid.is_within_bounds(new_cell) and board.would_not_end_in_check(cell, new_cell):
+	#		if board.board_state[new_cell.x][new_cell.y] != null and board.board_state[new_cell.x][new_cell.y].team != board.board_state[cell.x][cell.y].team:
+	#			moves.append(new_cell)
 	return moves
 
 func calculate_queen_move(cell: Vector2) -> Array:
@@ -147,9 +150,11 @@ func calculate_knight_attacks(cell: Vector2) -> Array:
 
 func calculate_pawn_attacks(cell: Vector2) -> Array:
 	var attacks = []
-	var possible_cap = [Vector2(-1, 1), Vector2(1, 1)]
+	#var possible_cap = [Vector2(-1, 1), Vector2(1, 1)]
+	var possible_cap = [Vector2(0, 1)]
 	if board.board_state[cell.x][cell.y] != null and board.board_state[cell.x][cell.y].team != "blue":
-		possible_cap = [Vector2(-1, -1), Vector2(1, -1)]
+		possible_cap = Vector2(0, -1)
+		#possible_cap = [Vector2(-1, -1), Vector2(1, -1)]
 	for p in possible_cap:
 		var new_cell = cell + p
 		if grid.is_within_bounds(new_cell):

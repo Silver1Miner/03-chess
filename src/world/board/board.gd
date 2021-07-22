@@ -1,10 +1,13 @@
 extends Node2D
 
 export var grid: Resource = preload("res://src/world/board/Grid.tres")
-
+onready var marble_board = preload("res://assets/board/marble-board.png")
+onready var wood_board = preload("res://assets/board/marble-board.png")
+onready var land_board = preload("res://assets/board/marble-board.png")
 onready var units := $units
 onready var move_display := $move_display
 onready var player = $player
+onready var board_texture = $board_texture
 
 var board_state := []
 var board_display := []
@@ -24,6 +27,7 @@ var green_in_check := false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	set_board_style()
 	if player:
 		player.connect("accept_pressed", self, "_on_accept_pressed")
 		player.connect("cancel_pressed", self, "_on_cancel_pressed")
@@ -34,6 +38,14 @@ func _ready() -> void:
 	check()
 	endgame_state = checkmate_stalemate_checker()
 	print(endgame_state)
+
+func set_board_style() -> void:
+	if Gamestate.board == "marble":
+		board_texture.texture = marble_board
+	elif Gamestate.board == "wood":
+		board_texture.texture = wood_board
+	elif Gamestate.board == "land":
+		board_texture.texture = land_board
 
 func initialize_board_state() -> void:
 	for x in range(9):
