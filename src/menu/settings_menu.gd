@@ -8,8 +8,8 @@ onready var board_preview = $board_preview
 var east_sprite = preload("res://assets/pieces/knight/piece-shu-ma.png")
 var west_sprite = preload("res://assets/pieces/knight/image_part_032.png")
 var marble_board = preload("res://assets/board/marble-board.png")
-var wood_board = preload("res://assets/board/marble-board.png")
-var land_board = preload("res://assets/board/marble-board.png")
+var wood_board = preload("res://assets/board/wood-board.png")
+var province_board = preload("res://assets/board/province-board.png")
 
 signal back_pressed
 
@@ -25,7 +25,7 @@ func _ready() -> void:
 	piece_style.add_item("Xiang", 1)
 	board_style.add_item("Marble", 0)
 	board_style.add_item("Wood", 1)
-	board_style.add_item("Land", 2)
+	board_style.add_item("Province", 2)
 
 func _on_piece_style_selected(index) -> void:
 	if index == 0:
@@ -43,8 +43,8 @@ func _on_board_style_selected(index) -> void:
 		Gamestate.board = "wood"
 		board_preview.texture = wood_board
 	elif index == 2:
-		Gamestate.board = "land"
-		board_preview.texture = land_board
+		Gamestate.board = "province"
+		board_preview.texture = province_board
 
 func _on_back_button_pressed() -> void:
 	emit_signal("back_pressed")

@@ -2,8 +2,8 @@ extends Node2D
 
 export var grid: Resource = preload("res://src/world/board/Grid.tres")
 onready var marble_board = preload("res://assets/board/marble-board.png")
-onready var wood_board = preload("res://assets/board/marble-board.png")
-onready var land_board = preload("res://assets/board/marble-board.png")
+onready var wood_board = preload("res://assets/board/wood-board.png")
+onready var province_board = preload("res://assets/board/province-board.png")
 onready var units := $units
 onready var move_display := $move_display
 onready var player = $player
@@ -44,8 +44,8 @@ func set_board_style() -> void:
 		board_texture.texture = marble_board
 	elif Gamestate.board == "wood":
 		board_texture.texture = wood_board
-	elif Gamestate.board == "land":
-		board_texture.texture = land_board
+	elif Gamestate.board == "province":
+		board_texture.texture = province_board
 
 func initialize_board_state() -> void:
 	for x in range(9):
