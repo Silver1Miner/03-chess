@@ -8,6 +8,7 @@ onready var units := $units
 onready var move_display := $move_display
 onready var player = $player
 onready var board_texture = $board_texture
+onready var sound = $sound
 
 var board_state := []
 var board_display := []
@@ -34,7 +35,7 @@ func _ready() -> void:
 		player.connect("moved", self, "_on_player_moved")
 	initialize_board_state()
 	populate_state_from_board()
-	calculate_current_attacked_squares()
+	#calculate_current_attacked_squares()
 	check()
 	endgame_state = checkmate_stalemate_checker()
 	print(endgame_state)
@@ -67,12 +68,14 @@ func _on_accept_pressed(cell, team) -> void:
 	if selected_piece != null:
 		if cell in moves:
 			print("move ", selected_piece.piece_name, " to ", cell)
+			sound.play_move()
 			move_display.clear()
 			move_from_to(selected_piece.cell, cell)
-		elif board_state[cell.x][cell.y] == null:
+		elif board_state[cell.x][cell.y] == null or board_state[cell.x][cell.y] == selected_piece:
 			selected_piece = null
-			move_display.clear()
+			move_display.clear_moves()
 		elif team == board_state[cell.x][cell.y].team:
+			sound.play_move()
 			selected_piece = board_state[cell.x][cell.y]
 			calculate_piece_movement(cell)
 		return
@@ -81,12 +84,18 @@ func _on_accept_pressed(cell, team) -> void:
 		if team == board_state[cell.x][cell.y].team:
 			selected_piece = board_state[cell.x][cell.y]
 			calculate_piece_movement(cell)
+			sound.play_move()
 	else:
 		selected_piece = null
 		move_display.clear_moves()
 
 func _on_cancel_pressed(cell, team) -> void:
 	print(team, " pressed cancel at ", cell)
+	if selected_piece != null:
+		selected_piece = null
+		move_display.clear_moves()
+		return
+	# DEBUGGING
 	var attacks = []
 	var piece = board_state[cell.x][cell.y]
 	if piece == null:
@@ -117,6 +126,8 @@ func move_from_to(start_cell, end_cell) -> void:
 	board_display[end_cell.x][end_cell.y] = board_state[start_cell.x][start_cell.y].piece_name
 	if board_state[end_cell.x][end_cell.y] != null:
 		print(board_state[end_cell.x][end_cell.y].piece_name, " captured at ", end_cell)
+		board_state[end_cell.x][end_cell.y].set_cell(Vector2(1000,-1))
+		units.remove_child(board_state[end_cell.x][end_cell.y])
 		board_state[end_cell.x][end_cell.y].queue_free()
 	board_state[end_cell.x][end_cell.y] = board_state[start_cell.x][start_cell.y]
 	board_state[start_cell.x][start_cell.y] = null
@@ -128,7 +139,6 @@ func move_from_to(start_cell, end_cell) -> void:
 		elif board_state[end_cell.x][end_cell.y].team == "green" and end_cell.y < 3:
 			board_state[end_cell.x][end_cell.y].change_to_queen()
 	selected_piece = null
-	calculate_current_attacked_squares()
 	check()
 	next_turn()
 
@@ -207,16 +217,19 @@ func next_turn() -> void:
 	endgame_state = checkmate_stalemate_checker()
 
 func check() -> void:
+	calculate_current_attacked_squares()
 	move_display.clear_attacked()
 	var blue_checks = []
 	for sq in currently_attacked_by_blue:
 		if board_state[sq.x][sq.y] != null and board_state[sq.x][sq.y].piece_name == "king_red":
 			print("Red in check")
 			red_in_check = true
+			sound.play_check()
 			blue_checks.append(sq)
 		if board_state[sq.x][sq.y] != null and board_state[sq.x][sq.y].piece_name == "king_green":
 			print("Green in check")
 			green_in_check = true
+			sound.play_check()
 			blue_checks.append(sq)
 	move_display.add_draw_attacked(blue_checks)
 	var red_checks = []
@@ -224,10 +237,12 @@ func check() -> void:
 		if board_state[sq.x][sq.y] != null and board_state[sq.x][sq.y].piece_name == "king_blue":
 			print("Blue in check")
 			blue_in_check = true
+			sound.play_check()
 			red_checks.append(sq)
 		if board_state[sq.x][sq.y] != null and board_state[sq.x][sq.y].piece_name == "king_green":
 			print("Green in check")
 			green_in_check = true
+			sound.play_check()
 			red_checks.append(sq)
 	move_display.add_draw_attacked(red_checks)
 	var green_checks = []
@@ -235,10 +250,12 @@ func check() -> void:
 		if board_state[sq.x][sq.y] != null and board_state[sq.x][sq.y].piece_name == "king_red":
 			print("Red in check")
 			red_in_check = true
+			sound.play_check()
 			green_checks.append(sq)
 		if board_state[sq.x][sq.y] != null and board_state[sq.x][sq.y].piece_name == "king_blue":
 			print("Blue in check")
 			blue_in_check = true
+			sound.play_check()
 			green_checks.append(sq)
 	move_display.add_draw_attacked(green_checks)
 
@@ -248,7 +265,7 @@ func would_not_end_in_check(cell, new_cell) -> bool:
 	var prev_state = board_state.duplicate(true)
 	board_state[cell.x][cell.y].cell = new_cell
 	if board_state[new_cell.x][new_cell.y] != null:
-		board_state[new_cell.x][new_cell.y].cell = Vector2(100,100)
+		board_state[new_cell.x][new_cell.y].cell = Vector2(1000,-1)
 	board_state[new_cell.x][new_cell.y] = board_state[cell.x][cell.y]
 	board_state[cell.x][cell.y] = null
 	calculate_current_attacked_squares()
