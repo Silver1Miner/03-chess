@@ -4,8 +4,12 @@ onready var board = get_parent()
 export var grid: Resource = preload("res://src/world/board/Grid.tres")
 var piece_list = null
 var ai_color = "red"
+var t = Timer.new()
 
 func _ready() -> void:
+	t.set_wait_time(0.5)
+	t.set_one_shot(true)
+	add_child(t)
 	if not board is Viewport:
 		piece_list = board.get_node("units").get_children()
 
@@ -20,6 +24,8 @@ func random_move(color) -> void:
 		var ri = randi() % legal_moves.size()
 		print(ri)
 		print(legal_moves)
+		t.start()
+		yield(t, "timeout")
 		board.move_from_to(legal_moves[ri][0],legal_moves[ri][1])
 
 func score_piece(piece, team) -> float:

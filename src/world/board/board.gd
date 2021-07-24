@@ -31,6 +31,7 @@ var green_in_check := false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	set_board_ai()
 	set_board_style()
 	if player:
 		player.connect("accept_pressed", self, "_on_accept_pressed")
@@ -42,6 +43,17 @@ func _ready() -> void:
 	check()
 	endgame_state = checkmate_stalemate_checker()
 	print(endgame_state)
+	player.team = "green"
+	next_turn()
+
+func set_board_ai() -> void:
+	ai_controlled_teams.clear()
+	if Gamestate.red_ai:
+		ai_controlled_teams.append("red")
+	if Gamestate.blue_ai:
+		ai_controlled_teams.append("blue")
+	if Gamestate.green_ai:
+		ai_controlled_teams.append("green")
 
 func set_board_style() -> void:
 	if Gamestate.board == "marble":

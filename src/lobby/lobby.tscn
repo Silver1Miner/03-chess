@@ -106,7 +106,7 @@ text = "Port"
 margin_left = 54.0
 margin_right = 128.0
 margin_bottom = 14.0
-text = "Players"
+text = "# Players"
 
 [node name="server_port" type="TextEdit" parent="CanvasLayer/VBoxContainer/Host/server_info/server_options"]
 margin_top = 18.0

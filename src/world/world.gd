@@ -3,11 +3,14 @@ extends Node2D
 onready var player_name = $HUD/Label
 onready var hud_player_list = $HUD/playerlist
 onready var board = $board
+onready var menu_button = $menu_button
 
 export var grid: Resource = preload("res://src/world/board/Grid.tres")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	if menu_button.connect("pressed", self, "_on_menu_button_pressed") != OK:
+		push_error("menu button connect fail")
 	if !Gamestate.is_singleplayer:
 		if Network.connect("player_list_changed", self, "_on_player_list_changed") != OK:
 			push_error("player list change signal connect fail")
@@ -22,6 +25,10 @@ func _ready():
 			rpc_id(1, "spawn_players", Gamestate.player_info, -1)
 	else:
 		spawn_singleplayer()
+
+func _on_menu_button_pressed() -> void:
+	if get_tree().change_scene("res://src/menu/menu.tscn") != OK:
+		push_error("main menu change fail")
 
 func _on_player_list_changed() -> void:
 	# remove all children from hud list

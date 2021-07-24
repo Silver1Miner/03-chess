@@ -1,0 +1,123 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://src/menu/singleplayer_menu.gd" type="Script" id=1]
+[ext_resource path="res://assets/themes/menu.tres" type="Theme" id=2]
+[ext_resource path="res://assets/pieces/king/image_part_036.png" type="Texture" id=3]
+[ext_resource path="res://assets/pieces/king/image_part_066.png" type="Texture" id=4]
+[ext_resource path="res://assets/pieces/king/image_part_054.png" type="Texture" id=5]
+
+[node name="singleplayer_menu" type="ColorRect"]
+margin_left = 80.0
+margin_top = 300.0
+margin_right = 930.0
+margin_bottom = 650.0
+theme = ExtResource( 2 )
+color = Color( 0, 0, 0, 0.784314 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="start" type="Button" parent="."]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -27.0
+margin_top = -50.0
+margin_right = 27.0
+margin_bottom = -25.0
+text = "Start"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="close" type="Button" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -61.0
+margin_bottom = 25.0
+text = "close"
+
+[node name="grid" type="GridContainer" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -224.0
+margin_top = -60.5
+margin_right = 224.0
+margin_bottom = 60.5
+custom_constants/vseparation = 32
+custom_constants/hseparation = 128
+columns = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="blue" type="TextureRect" parent="grid"]
+margin_right = 64.0
+margin_bottom = 64.0
+rect_min_size = Vector2( 64, 64 )
+texture = ExtResource( 4 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="red" type="TextureRect" parent="grid"]
+margin_left = 192.0
+margin_right = 256.0
+margin_bottom = 64.0
+rect_min_size = Vector2( 64, 64 )
+texture = ExtResource( 3 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="green" type="TextureRect" parent="grid"]
+margin_left = 384.0
+margin_right = 448.0
+margin_bottom = 64.0
+rect_min_size = Vector2( 64, 64 )
+texture = ExtResource( 5 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="blue_ai" type="Button" parent="grid"]
+margin_top = 96.0
+margin_right = 64.0
+margin_bottom = 121.0
+rect_min_size = Vector2( 64, 25 )
+toggle_mode = true
+text = "Human"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="red_ai" type="Button" parent="grid"]
+margin_left = 192.0
+margin_top = 96.0
+margin_right = 256.0
+margin_bottom = 121.0
+rect_min_size = Vector2( 64, 25 )
+toggle_mode = true
+text = "Human"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="green_ai" type="Button" parent="grid"]
+margin_left = 384.0
+margin_top = 96.0
+margin_right = 448.0
+margin_bottom = 121.0
+rect_min_size = Vector2( 64, 25 )
+toggle_mode = true
+text = "Human"
+__meta__ = {
+"_edit_use_anchors_": false
+}

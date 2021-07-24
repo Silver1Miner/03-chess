@@ -6,6 +6,7 @@ onready var multiplayer_button = $options/multiplayer
 onready var settings_button = $options/settings
 onready var quit_button = $options/quit
 onready var settings_menu = $settings_menu
+onready var singleplayer_menu = $singleplayer_menu
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -21,11 +22,15 @@ func _ready():
 		push_error("quit button connect fail")
 	if settings_menu.connect("back_pressed", self, "_on_settings_menu_close") != OK:
 		push_error("settings back connect fail")
+	if singleplayer_menu.connect("back_pressed", self, "_on_singleplayer_menu_close") != OK:
+		push_error("singleplayer back connect fail")
 
 func _on_singleplayer() -> void:
 	Gamestate.is_singleplayer = true
-	if get_tree().change_scene("res://src/world/world.tscn") != OK:
-		push_error("change scene fail")
+	settings_menu.visible = false
+	options.visible = false
+	singleplayer_menu.visible = true
+	singleplayer_menu.set_style()
 
 func _on_multiplayer() -> void:
 	Gamestate.is_singleplayer = false
@@ -34,10 +39,17 @@ func _on_multiplayer() -> void:
 
 func _on_settings_button_pressed() -> void:
 	settings_menu.visible = true
+	singleplayer_menu.visible = false
 	options.visible = false
 
 func _on_settings_menu_close() -> void:
 	settings_menu.visible = false
+	singleplayer_menu.visible = false
+	options.visible = true
+
+func _on_singleplayer_menu_close() -> void:
+	settings_menu.visible = false
+	singleplayer_menu.visible = false
 	options.visible = true
 
 func _on_quit_button_pressed() -> void:

@@ -10,6 +10,9 @@ var player_info = {
 }
 var style = "W" # W or E
 var board = "marble" # marble, wood, land
+var blue_ai = false
+var red_ai = false
+var green_ai = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
