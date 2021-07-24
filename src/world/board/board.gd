@@ -9,12 +9,15 @@ onready var move_display := $move_display
 onready var player = $player
 onready var board_texture = $board_texture
 onready var sound = $sound
+onready var ai_player = $AI
+onready var ai_controlled_teams = ["red", "green"]
 
 var board_state := []
 var board_display := []
 
 var selected_piece = null
 var moves := []
+var move_ends := []
 var currently_attacked_by_blue := []
 var currently_attacked_by_red := []
 var currently_attacked_by_green := []
@@ -66,7 +69,7 @@ func populate_state_from_board() -> void:
 func _on_accept_pressed(cell, team) -> void:
 	print(team, " pressed select at ", cell)
 	if selected_piece != null:
-		if cell in moves:
+		if cell in move_ends:
 			print("move ", selected_piece.piece_name, " to ", cell)
 			sound.play_move()
 			move_display.clear()
@@ -144,6 +147,7 @@ func move_from_to(start_cell, end_cell) -> void:
 
 func calculate_piece_movement(cell: Vector2) -> void:
 	moves.clear()
+	move_ends.clear()
 	print(board_state[cell.x][cell.y].piece_name)
 	match board_state[cell.x][cell.y].piece_type:
 		"king":
@@ -158,8 +162,10 @@ func calculate_piece_movement(cell: Vector2) -> void:
 			moves = units.calculate_queen_move(cell)
 		"rook":
 			moves = units.calculate_rook_move(cell)
-	move_display.draw_moves(moves)
-	print(board_state[cell.x][cell.y].piece_type, " moves: ", moves)
+	for m in moves:
+		move_ends.append(m[1])
+	move_display.draw_moves(move_ends)
+	print(board_state[cell.x][cell.y].piece_type, " moves: ", move_ends)
 
 func calculate_current_attacked_squares() -> void:
 	currently_attacked_by_blue.clear()
@@ -215,6 +221,11 @@ func next_turn() -> void:
 		print("Blue's turn")
 	check()
 	endgame_state = checkmate_stalemate_checker()
+	if current_turn in ai_controlled_teams:
+		ai_turn()
+
+func ai_turn() -> void:
+	ai_player.action(current_turn)
 
 func check() -> void:
 	calculate_current_attacked_squares()
@@ -306,25 +317,31 @@ func checkmate_stalemate_checker() -> String:
 			if not all_blue_moves:
 				if blue_in_check:
 					print("blue lost")
+					ai_controlled_teams = []
 					return "blue checkmated"
 				else:
 					print("stalemate")
+					ai_controlled_teams = []
 					return "stalemate"
 		"red":
 			if not all_red_moves:
 				if red_in_check:
 					print("red lost")
+					ai_controlled_teams = []
 					return "red checkmated"
 				else:
 					print("stalemate")
+					ai_controlled_teams = []
 					return "stalemate"
 		"green":
 			if not all_green_moves:
 				if green_in_check:
 					print("green lost")
+					ai_controlled_teams = []
 					return "green checkmated"
 				else:
 					print("stalemate")
+					ai_controlled_teams = []
 					return "stalemate"
 	return "playing"
 

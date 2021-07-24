@@ -19,7 +19,7 @@ func calculate_king_move(cell: Vector2) -> Array:
 	var legal_moves = []
 	for m in moves:
 		if board.would_not_end_in_check(cell, m):
-			legal_moves.append(m)
+			legal_moves.append([cell, m])
 	return legal_moves
 
 func calculate_bishop_move(cell: Vector2) -> Array:
@@ -40,7 +40,7 @@ func calculate_bishop_move(cell: Vector2) -> Array:
 	var legal_moves = []
 	for m in moves:
 		if board.would_not_end_in_check(cell, m):
-			legal_moves.append(m)
+			legal_moves.append([cell, m])
 	return legal_moves
 
 func calculate_knight_move(cell: Vector2) -> Array:
@@ -50,12 +50,16 @@ func calculate_knight_move(cell: Vector2) -> Array:
 	Vector2(2,-1), Vector2(-1,-2), Vector2(1,-2)]
 	for p in possible:
 		var new_cell = cell + p
-		if grid.is_within_bounds(new_cell) and board.would_not_end_in_check(cell, new_cell):
+		if grid.is_within_bounds(new_cell):
 			if board.board_state[new_cell.x][new_cell.y] == null:
 				moves.append(new_cell)
 			elif board.board_state[new_cell.x][new_cell.y].team != board.board_state[cell.x][cell.y].team:
 				moves.append(new_cell)
-	return moves
+	var legal_moves = []
+	for m in moves:
+		if board.would_not_end_in_check(cell, m):
+			legal_moves.append([cell, m])
+	return legal_moves
 
 func calculate_pawn_move(cell: Vector2) -> Array:
 	var moves = []
@@ -65,7 +69,7 @@ func calculate_pawn_move(cell: Vector2) -> Array:
 		#possible_cap = [Vector2(-1, -1), Vector2(1, -1)]
 		possible_mov = Vector2(0, -1)
 	var new_cell = cell + possible_mov
-	if grid.is_within_bounds(new_cell) and board.would_not_end_in_check(cell, new_cell):
+	if grid.is_within_bounds(new_cell):
 		if board.board_state[new_cell.x][new_cell.y] == null:
 			moves.append(new_cell)
 		# capture and move same version
@@ -76,7 +80,11 @@ func calculate_pawn_move(cell: Vector2) -> Array:
 	#	if grid.is_within_bounds(new_cell) and board.would_not_end_in_check(cell, new_cell):
 	#		if board.board_state[new_cell.x][new_cell.y] != null and board.board_state[new_cell.x][new_cell.y].team != board.board_state[cell.x][cell.y].team:
 	#			moves.append(new_cell)
-	return moves
+	var legal_moves = []
+	for m in moves:
+		if board.would_not_end_in_check(cell, m):
+			legal_moves.append([cell, m])
+	return legal_moves
 
 func calculate_queen_move(cell: Vector2) -> Array:
 	var moves = []
@@ -90,7 +98,11 @@ func calculate_queen_move(cell: Vector2) -> Array:
 				moves.append(new_cell)
 			elif board.board_state[new_cell.x][new_cell.y].team != board.board_state[cell.x][cell.y].team:
 				moves.append(new_cell)
-	return moves
+	var legal_moves = []
+	for m in moves:
+		if board.would_not_end_in_check(cell, m):
+			legal_moves.append([cell, m])
+	return legal_moves
 
 func calculate_rook_move(cell: Vector2) -> Array:
 	var moves = []
@@ -108,9 +120,9 @@ func calculate_rook_move(cell: Vector2) -> Array:
 				else:
 					break
 	var legal_moves = []
-	for mov in moves:
-		if board.would_not_end_in_check(cell, mov):
-			legal_moves.append(mov)
+	for m in moves:
+		if board.would_not_end_in_check(cell, m):
+			legal_moves.append([cell, m])
 	return legal_moves
 
 func calculate_king_attacks(cell: Vector2) -> Array:
