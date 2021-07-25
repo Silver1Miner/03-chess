@@ -1,4 +1,4 @@
-extends Control
+extends Control # menu.gd The main menu
 
 onready var options = $options
 onready var singleplayer_button = $options/singleplayer

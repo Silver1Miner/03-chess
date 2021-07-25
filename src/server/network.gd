@@ -8,7 +8,7 @@ signal player_removed(pinfo)
 
 var server_info = {
 	server_name = "Server",
-	max_players = 0,
+	max_players = 2,
 	used_port = 0,
 }
 var players = {}
@@ -36,7 +36,7 @@ func create_server() -> void:
 	register_player(Gamestate.player_info)
 
 func _on_player_connected(_id) -> void:
-	pass
+	emit_signal("player_list_changed")
 
 func _on_player_disconnected(id) -> void:
 	print("Player ", players[id].player_name, " disconnected from server")

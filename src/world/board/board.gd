@@ -1,4 +1,4 @@
-extends Node2D
+extends Node2D # board.gd The game board
 
 export var grid: Resource = preload("res://src/world/board/Grid.tres")
 onready var marble_board = preload("res://assets/board/marble-board.png")
@@ -29,6 +29,8 @@ var blue_in_check := false
 var red_in_check := false
 var green_in_check := false
 
+signal whose_turn(turn)
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	set_board_ai()
@@ -56,11 +58,11 @@ func set_board_ai() -> void:
 		ai_controlled_teams.append("green")
 
 func set_board_style() -> void:
-	if Gamestate.board == "marble":
+	if Gamestate.board_style == "marble":
 		board_texture.texture = marble_board
-	elif Gamestate.board == "wood":
+	elif Gamestate.board_style == "wood":
 		board_texture.texture = wood_board
-	elif Gamestate.board == "province":
+	elif Gamestate.board_style == "province":
 		board_texture.texture = province_board
 
 func initialize_board_state() -> void:
@@ -135,12 +137,17 @@ func _on_player_moved(_cell, _team) -> void:
 	#print(team, " moved cursor to ", cell)
 	pass
 
-func move_from_to(start_cell, end_cell) -> void:
+remote func move_from_to(start_cell, end_cell) -> void:
+	if !Gamestate.is_singleplayer and get_tree().is_network_server():
+		for id in Network.players:
+			if (id != 1):
+				rpc_id(id, "move_from_to", start_cell, end_cell)
 	board_state[start_cell.x][start_cell.y].move_along_path([start_cell, end_cell])
 	board_display[start_cell.x][start_cell.y] = ""
 	board_display[end_cell.x][end_cell.y] = board_state[start_cell.x][start_cell.y].piece_name
 	if board_state[end_cell.x][end_cell.y] != null:
 		print(board_state[end_cell.x][end_cell.y].piece_name, " captured at ", end_cell)
+		sound.play_check()
 		board_state[end_cell.x][end_cell.y].set_cell(Vector2(1000,-1))
 		units.remove_child(board_state[end_cell.x][end_cell.y])
 		board_state[end_cell.x][end_cell.y].queue_free()
@@ -231,6 +238,7 @@ func next_turn() -> void:
 		player.set_team("blue")
 		current_turn = "blue"
 		print("Blue's turn")
+	emit_signal("whose_turn", current_turn)
 	check()
 	endgame_state = checkmate_stalemate_checker()
 	if current_turn in ai_controlled_teams:

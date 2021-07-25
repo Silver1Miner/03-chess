@@ -1,4 +1,4 @@
-extends Node
+extends Node # AI.gd the AI player
 
 onready var board = get_parent()
 export var grid: Resource = preload("res://src/world/board/Grid.tres")

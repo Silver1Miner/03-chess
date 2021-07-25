@@ -1,10 +1,9 @@
-extends Node2D
+extends Node2D #player.gd the player cursor
 
 signal accept_pressed(cell, team)
 signal cancel_pressed(cell, team)
 signal moved(new_cell, team)
 
-export var is_singleplayer := true
 export var grid: Resource = preload("res://src/world/board/Grid.tres")
 export var ui_cooldown := 0.1
 
@@ -39,7 +38,7 @@ func set_team(input: String) -> void:
 	_sprite.modulate = colors[team]
 
 func _unhandled_input(event) -> void:
-	if is_singleplayer or is_network_master():
+	if Gamestate.is_singleplayer or Gamestate.player_info[team]:
 		if event is InputEventMouseMotion:
 			if grid.is_within_bounds(grid.calculate_grid_coordinates(event.position-board_position)):
 				self.cell = grid.calculate_grid_coordinates(event.position - board_position)
@@ -62,7 +61,7 @@ func _unhandled_input(event) -> void:
 			self.cell += Vector2.UP
 		elif event.is_action("ui_down"):
 			self.cell += Vector2.DOWN
-		if !is_singleplayer:
+		if !Gamestate.is_singleplayer:
 			rset("repl_cell", self.cell)
 	else:
 		set_cell(repl_cell)

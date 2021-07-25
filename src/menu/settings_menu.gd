@@ -37,13 +37,13 @@ func _on_piece_style_selected(index) -> void:
 
 func _on_board_style_selected(index) -> void:
 	if index == 0:
-		Gamestate.board = "marble"
+		Gamestate.board_style = "marble"
 		board_preview.texture = marble_board
 	elif index == 1:
-		Gamestate.board = "wood"
+		Gamestate.board_style = "wood"
 		board_preview.texture = wood_board
 	elif index == 2:
-		Gamestate.board = "province"
+		Gamestate.board_style = "province"
 		board_preview.texture = province_board
 
 func _on_back_button_pressed() -> void:

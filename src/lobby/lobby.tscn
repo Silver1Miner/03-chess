@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://src/lobby/lobby.gd" type="Script" id=1]
+[ext_resource path="res://assets/themes/menu.tres" type="Theme" id=2]
+[ext_resource path="res://assets/menu_art.png" type="Texture" id=3]
 
 [node name="lobby" type="Control"]
 anchor_right = 1.0
@@ -9,221 +11,322 @@ margin_left = 1.12372
 margin_top = -0.820068
 margin_right = 1.12378
 margin_bottom = -0.820068
+theme = ExtResource( 2 )
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer"]
-margin_right = 40.0
-margin_bottom = 40.0
+[node name="lobby_options" type="VBoxContainer" parent="CanvasLayer"]
+margin_left = 40.0
+margin_top = 40.0
+margin_right = 240.0
+margin_bottom = 648.0
+theme = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Player" type="Panel" parent="CanvasLayer/VBoxContainer"]
+[node name="Player" type="Panel" parent="CanvasLayer/lobby_options"]
 margin_right = 200.0
-margin_bottom = 200.0
-rect_min_size = Vector2( 200, 200 )
+margin_bottom = 100.0
+rect_min_size = Vector2( 200, 100 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="name" type="VBoxContainer" parent="CanvasLayer/VBoxContainer/Player"]
+[node name="name" type="VBoxContainer" parent="CanvasLayer/lobby_options/Player"]
 margin_right = 40.0
 margin_bottom = 40.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/Player/name"]
-margin_right = 85.0
-margin_bottom = 14.0
+[node name="Label" type="Label" parent="CanvasLayer/lobby_options/Player/name"]
+margin_right = 105.0
+margin_bottom = 19.0
 text = "Player Name:"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="name_edit" type="LineEdit" parent="CanvasLayer/VBoxContainer/Player/name"]
-margin_top = 18.0
-margin_right = 85.0
-margin_bottom = 42.0
+[node name="name_edit" type="LineEdit" parent="CanvasLayer/lobby_options/Player/name"]
+margin_top = 23.0
+margin_right = 105.0
+margin_bottom = 52.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Host" type="Panel" parent="CanvasLayer/VBoxContainer"]
-margin_top = 204.0
+[node name="Host" type="Panel" parent="CanvasLayer/lobby_options"]
+margin_top = 104.0
 margin_right = 200.0
-margin_bottom = 404.0
-rect_min_size = Vector2( 200, 200 )
+margin_bottom = 354.0
+rect_min_size = Vector2( 200, 250 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="server_info" type="VBoxContainer" parent="CanvasLayer/VBoxContainer/Host"]
+[node name="server_info" type="VBoxContainer" parent="CanvasLayer/lobby_options/Host"]
 margin_right = 40.0
 margin_bottom = 40.0
+custom_constants/separation = 10
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/Host/server_info"]
-margin_right = 128.0
-margin_bottom = 14.0
+[node name="Label" type="Label" parent="CanvasLayer/lobby_options/Host/server_info"]
+margin_right = 176.0
+margin_bottom = 19.0
 text = "Create Server"
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label2" type="Label" parent="CanvasLayer/VBoxContainer/Host/server_info"]
-margin_top = 18.0
-margin_right = 128.0
-margin_bottom = 32.0
+[node name="Label2" type="Label" parent="CanvasLayer/lobby_options/Host/server_info"]
+margin_top = 29.0
+margin_right = 176.0
+margin_bottom = 48.0
 text = "Server Name:"
 
-[node name="server_name" type="LineEdit" parent="CanvasLayer/VBoxContainer/Host/server_info"]
-margin_top = 36.0
-margin_right = 128.0
-margin_bottom = 66.0
+[node name="server_name" type="LineEdit" parent="CanvasLayer/lobby_options/Host/server_info"]
+margin_top = 58.0
+margin_right = 176.0
+margin_bottom = 88.0
 rect_min_size = Vector2( 0, 30 )
 
-[node name="server_options" type="GridContainer" parent="CanvasLayer/VBoxContainer/Host/server_info"]
-margin_top = 70.0
-margin_right = 128.0
-margin_bottom = 118.0
+[node name="server_options" type="GridContainer" parent="CanvasLayer/lobby_options/Host/server_info"]
+margin_top = 98.0
+margin_right = 176.0
+margin_bottom = 151.0
 columns = 2
 
-[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/Host/server_info/server_options"]
+[node name="Label" type="Label" parent="CanvasLayer/lobby_options/Host/server_info/server_options"]
 margin_right = 50.0
-margin_bottom = 14.0
+margin_bottom = 19.0
 text = "Port"
 
-[node name="Label2" type="Label" parent="CanvasLayer/VBoxContainer/Host/server_info/server_options"]
+[node name="Label2" type="Label" parent="CanvasLayer/lobby_options/Host/server_info/server_options"]
 margin_left = 54.0
-margin_right = 128.0
-margin_bottom = 14.0
-text = "# Players"
+margin_right = 176.0
+margin_bottom = 19.0
+text = "Players (2 or 3)"
 
-[node name="server_port" type="TextEdit" parent="CanvasLayer/VBoxContainer/Host/server_info/server_options"]
-margin_top = 18.0
+[node name="server_port" type="TextEdit" parent="CanvasLayer/lobby_options/Host/server_info/server_options"]
+margin_top = 23.0
 margin_right = 50.0
-margin_bottom = 48.0
+margin_bottom = 53.0
 rect_min_size = Vector2( 50, 30 )
 text = "4546"
 
-[node name="max_players" type="SpinBox" parent="CanvasLayer/VBoxContainer/Host/server_info/server_options"]
+[node name="max_players" type="SpinBox" parent="CanvasLayer/lobby_options/Host/server_info/server_options"]
 margin_left = 54.0
-margin_top = 18.0
-margin_right = 128.0
-margin_bottom = 48.0
+margin_top = 23.0
+margin_right = 176.0
+margin_bottom = 53.0
 min_value = 2.0
 max_value = 3.0
 value = 2.0
 
-[node name="create_server_button" type="Button" parent="CanvasLayer/VBoxContainer/Host/server_info"]
-margin_top = 122.0
-margin_right = 128.0
-margin_bottom = 142.0
+[node name="get_ip" type="Button" parent="CanvasLayer/lobby_options/Host/server_info"]
+margin_top = 161.0
+margin_right = 176.0
+margin_bottom = 186.0
+text = "Get public ip"
+
+[node name="create_server_button" type="Button" parent="CanvasLayer/lobby_options/Host/server_info"]
+margin_top = 196.0
+margin_right = 176.0
+margin_bottom = 221.0
 text = "Create"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Join" type="Panel" parent="CanvasLayer/VBoxContainer"]
-margin_top = 408.0
+[node name="Join" type="Panel" parent="CanvasLayer/lobby_options"]
+margin_top = 358.0
 margin_right = 200.0
-margin_bottom = 608.0
+margin_bottom = 558.0
 rect_min_size = Vector2( 200, 200 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="join_server" type="VBoxContainer" parent="CanvasLayer/VBoxContainer/Join"]
+[node name="join_server" type="VBoxContainer" parent="CanvasLayer/lobby_options/Join"]
 margin_right = 40.0
 margin_bottom = 40.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/Join/join_server"]
+[node name="Label" type="Label" parent="CanvasLayer/lobby_options/Join/join_server"]
 margin_right = 162.0
-margin_bottom = 14.0
+margin_bottom = 19.0
 text = "Join Server"
 align = 1
 
-[node name="join_options" type="GridContainer" parent="CanvasLayer/VBoxContainer/Join/join_server"]
-margin_top = 18.0
+[node name="join_options" type="GridContainer" parent="CanvasLayer/lobby_options/Join/join_server"]
+margin_top = 23.0
 margin_right = 162.0
-margin_bottom = 60.0
+margin_bottom = 75.0
 columns = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/Join/join_server/join_options"]
+[node name="Label" type="Label" parent="CanvasLayer/lobby_options/Join/join_server/join_options"]
 margin_right = 100.0
-margin_bottom = 14.0
+margin_bottom = 19.0
 text = "IP Address"
 
-[node name="Label2" type="Label" parent="CanvasLayer/VBoxContainer/Join/join_server/join_options"]
+[node name="Label2" type="Label" parent="CanvasLayer/lobby_options/Join/join_server/join_options"]
 margin_left = 104.0
 margin_right = 162.0
-margin_bottom = 14.0
+margin_bottom = 19.0
 text = "Port"
 
-[node name="ip_address" type="LineEdit" parent="CanvasLayer/VBoxContainer/Join/join_server/join_options"]
-margin_top = 18.0
+[node name="ip_address" type="LineEdit" parent="CanvasLayer/lobby_options/Join/join_server/join_options"]
+margin_top = 23.0
 margin_right = 100.0
-margin_bottom = 42.0
+margin_bottom = 52.0
 rect_min_size = Vector2( 100, 0 )
 text = "127.0.0.1"
 
-[node name="port" type="LineEdit" parent="CanvasLayer/VBoxContainer/Join/join_server/join_options"]
+[node name="port" type="LineEdit" parent="CanvasLayer/lobby_options/Join/join_server/join_options"]
 margin_left = 104.0
-margin_top = 18.0
+margin_top = 23.0
 margin_right = 162.0
-margin_bottom = 42.0
+margin_bottom = 52.0
 text = "4546"
 
-[node name="join_server_button" type="Button" parent="CanvasLayer/VBoxContainer/Join/join_server"]
-margin_top = 64.0
+[node name="join_server_button" type="Button" parent="CanvasLayer/lobby_options/Join/join_server"]
+margin_top = 79.0
 margin_right = 162.0
-margin_bottom = 84.0
+margin_bottom = 104.0
 text = "Join"
 
-[node name="Panel" type="Panel" parent="CanvasLayer"]
-margin_left = 301.124
-margin_top = 50.0708
-margin_right = 801.124
-margin_bottom = 550.071
+[node name="lobby_info" type="Panel" parent="CanvasLayer"]
+margin_left = 453.468
+margin_top = 111.543
+margin_right = 953.468
+margin_bottom = 611.543
+theme = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="connected_players" type="Label" parent="CanvasLayer/lobby_info"]
+margin_right = 40.0
+margin_bottom = 19.0
+text = "Connected Players"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="player_list" type="VBoxContainer" parent="CanvasLayer/lobby_info"]
+margin_left = 37.417
+margin_top = 28.3283
+margin_right = 83.417
+margin_bottom = 68.3282
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="leave_lobby" type="Button" parent="CanvasLayer/lobby_info"]
+margin_left = 86.4171
+margin_top = 412.486
+margin_right = 195.417
+margin_bottom = 437.486
+text = "Leave Lobby"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="start_game" type="Button" parent="CanvasLayer/lobby_info"]
+margin_left = 305.578
+margin_top = 407.141
+margin_right = 405.578
+margin_bottom = 432.141
+text = "Start Game"
+
+[node name="blue_label" type="Label" parent="CanvasLayer/lobby_info"]
+margin_left = 67.7083
+margin_top = 203.125
+margin_right = 218.708
+margin_bottom = 222.125
+text = "Blue Player Assign"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="red_label" type="Label" parent="CanvasLayer/lobby_info"]
+margin_left = 67.7083
+margin_top = 250.343
+margin_right = 218.708
+margin_bottom = 269.343
+text = "Red Player Assign"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="green_bael" type="Label" parent="CanvasLayer/lobby_info"]
+margin_left = 64.1447
+margin_top = 301.124
+margin_right = 215.145
+margin_bottom = 320.124
+text = "Green Player Assign"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="blue_player" type="OptionButton" parent="CanvasLayer/lobby_info"]
+margin_left = 259.252
+margin_top = 199.561
+margin_right = 397.252
+margin_bottom = 224.561
+text = "Blue Player"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="red_player" type="OptionButton" parent="CanvasLayer/lobby_info"]
+margin_left = 258.361
+margin_top = 247.67
+margin_right = 396.361
+margin_bottom = 272.67
+text = "Red Plyaer"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="green_player" type="OptionButton" parent="CanvasLayer/lobby_info"]
+margin_left = 254.797
+margin_top = 294.887
+margin_right = 392.797
+margin_bottom = 319.887
+text = "green Player"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="back_main" type="Button" parent="CanvasLayer"]
-margin_left = 697.366
-margin_top = 15.1191
-margin_right = 831.366
-margin_bottom = 35.1191
+margin_left = 1027.89
+margin_top = 644.094
+margin_right = 1187.89
+margin_bottom = 669.094
+theme = ExtResource( 2 )
 text = "Back to Main Menu"
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="player_list" type="VBoxContainer" parent="CanvasLayer"]
-margin_left = 338.541
-margin_top = 78.3991
-margin_right = 378.541
-margin_bottom = 118.399
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="CanvasLayer/player_list"]
-margin_right = 46.0
-margin_bottom = 14.0
-text = "Testing"

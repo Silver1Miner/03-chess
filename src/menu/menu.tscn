@@ -41,10 +41,10 @@ __meta__ = {
 }
 
 [node name="title" type="Label" parent="."]
-margin_left = 100.0
-margin_top = 100.0
-margin_right = 1107.0
-margin_bottom = 182.0
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 1017.0
+margin_bottom = 92.0
 custom_fonts/font = SubResource( 3 )
 custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -54,10 +54,10 @@ __meta__ = {
 }
 
 [node name="subtitle" type="Label" parent="."]
-margin_left = 185.041
-margin_top = 175.302
-margin_right = 473.041
-margin_bottom = 279.302
+margin_left = 30.0
+margin_top = 80.0
+margin_right = 318.0
+margin_bottom = 184.0
 custom_fonts/font = SubResource( 4 )
 custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -67,10 +67,10 @@ __meta__ = {
 }
 
 [node name="options" type="VBoxContainer" parent="."]
-margin_left = 196.431
-margin_top = 338.984
-margin_right = 285.431
-margin_bottom = 430.984
+margin_left = 80.0
+margin_top = 300.0
+margin_right = 343.0
+margin_bottom = 560.0
 custom_constants/separation = 32
 __meta__ = {
 "_edit_use_anchors_": false
@@ -101,7 +101,6 @@ text = "Quit"
 
 [node name="settings_menu" parent="." instance=ExtResource( 6 )]
 visible = false
-color = Color( 0, 0, 0, 0.784314 )
 
 [node name="singleplayer_menu" parent="." instance=ExtResource( 7 )]
 visible = false

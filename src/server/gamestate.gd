@@ -4,20 +4,24 @@ var is_singleplayer := true
 var player_info = {
 	player_name = "Player",
 	net_id = 1,
-	actor_path = "res://src/world/player/player.tscn",
-	char_color = Color(1, 1, 1),
-	spawn_cell = Vector2(0, 0)
+	blue = false,
+	red = false,
+	green = false
 }
 var style = "W" # W or E
-var board = "marble" # marble, wood, land
+var board_style = "marble" # marble, wood, land
 var blue_ai = false
 var red_ai = false
 var green_ai = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	pass
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+func set_ai() -> void:
+	# ensure no ai in network game
+	if not is_singleplayer:
+		blue_ai = false
+		red_ai = false
+		green_ai = false
+	# ai not supported for network in current builds

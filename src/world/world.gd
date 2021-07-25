@@ -1,14 +1,16 @@
-extends Node2D
+extends Node2D # world.gd The gameworld
 
 onready var player_name = $HUD/Label
 onready var hud_player_list = $HUD/playerlist
 onready var board = $board
-onready var menu_button = $menu_button
+onready var menu_button = $game_display/menu_button
 
 export var grid: Resource = preload("res://src/world/board/Grid.tres")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	if board.connect("whose_turn", self, "_on_turn_change") != OK:
+		push_error("turn connect fail")
 	if menu_button.connect("pressed", self, "_on_menu_button_pressed") != OK:
 		push_error("menu button connect fail")
 	if !Gamestate.is_singleplayer:
@@ -19,16 +21,19 @@ func _ready():
 				push_error("player remove signal connect fail")
 		# display local player name
 		player_name.text = Gamestate.player_info.player_name
-		if (get_tree().is_network_server()):
-			spawn_players(Gamestate.player_info, 1)
-		else:
-			rpc_id(1, "spawn_players", Gamestate.player_info, -1)
+		#if (get_tree().is_network_server()):
+		#	spawn_players(Gamestate.player_info, 1)
+		#else:
+		#	rpc_id(1, "spawn_players", Gamestate.player_info, -1)
 	else:
 		spawn_singleplayer()
 
 func _on_menu_button_pressed() -> void:
 	if get_tree().change_scene("res://src/menu/menu.tscn") != OK:
 		push_error("main menu change fail")
+
+func _on_turn_change(turn) -> void:
+	$game_display/whose_turn.text = "Turn: " + turn
 
 func _on_player_list_changed() -> void:
 	# remove all children from hud list
