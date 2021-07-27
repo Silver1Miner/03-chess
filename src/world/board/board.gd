@@ -222,6 +222,7 @@ func calculate_current_attacked_squares() -> void:
 func _unhandled_input(event) -> void:
 	if event.is_action_pressed("ui_home"): # DEBUGGING
 		print(board_display)
+		print(Network.players)
 	if event.is_action_pressed("ui_focus_next"):
 		next_turn()
 

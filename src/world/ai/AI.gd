@@ -2,6 +2,7 @@ extends Node # AI.gd the AI player
 
 onready var board = get_parent()
 export var grid: Resource = preload("res://src/world/board/Grid.tres")
+var future_state = null
 var piece_list = null
 var ai_color = "red"
 var t = Timer.new()
@@ -63,3 +64,13 @@ class MinimaxResult:
 
 func evaluate_moves(color) -> void:
 	var _legal_moves = board.get_all_legal_moves(color)
+
+func get_best_move(color) -> Array:
+	var _legal_moves = board.get_all_legal_moves(color)
+	return []
+
+func minimax(depth, color) -> Array:
+	assert(depth >= 0)
+	if depth == 0:
+		return get_best_move(color)
+	return []

@@ -85,11 +85,11 @@ remote func despawn_player(pinfo) -> void:
 			# Replicate despawn into currently iterated player
 			rpc_id(id, "despawn_player", pinfo)
 	# locate the player actor
-	var player_node = get_node(str(pinfo.net_id))
-	if (!player_node):
-		print("Cannot remove invalid node from tree")
-		return
-	player_node.queue_free()
+	#var player_node = get_node(str(pinfo.net_id))
+	#if (!player_node):
+	#	print("Cannot remove invalid node from tree")
+	#	return
+	#player_node.queue_free()
 
 func spawn_singleplayer() -> void:
 	pass

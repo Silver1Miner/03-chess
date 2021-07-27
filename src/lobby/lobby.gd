@@ -55,7 +55,6 @@ func _ready() -> void:
 		player_name_edit.text = OS.get_environment("Username")
 	else:
 		player_name_edit.text = "Default Name"
-	check_ready()
 
 func _on_back_button_pressed() -> void:
 	if get_tree().change_scene("res://src/menu/menu.tscn") != OK:
@@ -106,19 +105,25 @@ func _on_player_list_changed() -> void:
 	blue_player_assign.add_item("Blue Player", 0)
 	green_player_assign.add_item("Green Player", 0)
 	# iterate through player list creating new entries
-	for p in Network.players:
+	var values = Network.players.keys()
+	values.sort()
+	for p in values:
 		var nlabel = Label.new()
-		nlabel.text = Network.players[p].player_name
+		nlabel.text = Network.players[p].player_name + " " + str(Network.players[p].join_order)
 		hud_player_list.add_child(nlabel)
-		red_player_assign.add_item(Network.players[p].player_name, Network.players[p].net_id)
-		blue_player_assign.add_item(Network.players[p].player_name, Network.players[p].net_id)
-		green_player_assign.add_item(Network.players[p].player_name, Network.players[p].net_id)
+		red_player_assign.add_item(Network.players[p].player_name + " " + str(Network.players[p].join_order), Network.players[p].join_order)
+		blue_player_assign.add_item(Network.players[p].player_name + " " + str(Network.players[p].join_order), Network.players[p].join_order)
+		green_player_assign.add_item(Network.players[p].player_name + " " + str(Network.players[p].join_order), Network.players[p].join_order)
 
 func _on_get_ip_pressed() -> void:
 	if OS.shell_open("https://icanhazip.com/") != OK:
 		push_error("shell open fail")
 
-remotesync func check_ready() -> void:
+remote func check_ready() -> void:
+	if get_tree().is_network_server():
+		for id in Network.players:
+			if (id != 1):
+				rpc_id(id, "check_ready")
 	print(Network.players)
 	if red_assigned and blue_assigned and green_assigned:
 		start_game_button.disabled = false
@@ -133,7 +138,7 @@ remote func _on_blue_select(index) -> void:
 			if (id != 1):
 				rpc_id(id, "_on_blue_select", index)
 	for p in Network.players:
-		if Network.players[p].net_id == index:
+		if Network.players[p].join_order == index:
 			Network.players[p]["blue"] = true
 		else:
 			Network.players[p]["blue"] = false
@@ -150,7 +155,7 @@ remote func _on_red_select(index) -> void:
 			if (id != 1):
 				rpc_id(id, "_on_red_select", index)
 	for p in Network.players:
-		if Network.players[p].net_id == index:
+		if Network.players[p].join_order == index:
 			Network.players[p]["red"] = true
 		else:
 			Network.players[p]["red"] = false
@@ -167,7 +172,7 @@ remote func _on_green_select(index) -> void:
 			if (id != 1):
 				rpc_id(id, "_on_green_select", index)
 	for p in Network.players:
-		if Network.players[p].net_id == index:
+		if Network.players[p].join_order == index:
 			Network.players[p]["green"] = true
 		else:
 			Network.players[p]["green"] = false

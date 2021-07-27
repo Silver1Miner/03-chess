@@ -6,6 +6,7 @@ signal join_fail
 signal player_list_changed
 signal player_removed(pinfo)
 
+var game_started = false
 var server_info = {
 	server_name = "Server",
 	max_players = 2,
@@ -89,6 +90,12 @@ remote func register_player(pinfo) -> void:
 	# executed on both client or server
 	print("Registering player ", pinfo.player_name, " (", pinfo.net_id, ") to internal player table")
 	players[pinfo.net_id] = pinfo      # create player entry in player list
+	var values = players.keys()
+	values.sort()
+	var i = 1
+	for p in values:
+		players[p]["join_order"] = i
+		i += 1
 	emit_signal("player_list_changed") # notify that the player list has been changed
 
 remote func unregister_player(id) -> void:

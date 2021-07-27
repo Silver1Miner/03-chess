@@ -4,6 +4,7 @@ var is_singleplayer := true
 var player_info = {
 	player_name = "Player",
 	net_id = 1,
+	join_order = 1,
 	blue = false,
 	red = false,
 	green = false
