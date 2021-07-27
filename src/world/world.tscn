@@ -11,6 +11,7 @@ script = ExtResource( 2 )
 [node name="ColorRect" type="ColorRect" parent="."]
 margin_right = 1280.0
 margin_bottom = 720.0
+mouse_filter = 2
 color = Color( 0.121569, 0.121569, 0.121569, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -43,6 +44,13 @@ text = "Back to Main Menu"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="end_state" type="Label" parent="game_display"]
+margin_left = 768.0
+margin_top = 232.0
+margin_right = 908.0
+margin_bottom = 251.0
+text = "game in progress"
 
 [node name="board" parent="." instance=ExtResource( 3 )]
 position = Vector2( 64, 64 )
