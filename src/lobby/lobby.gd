@@ -130,35 +130,53 @@ remote func check_ready() -> void:
 	else:
 		start_game_button.disabled = true
 
-remote func _on_blue_select(index) -> void:
+func _on_blue_select(index) -> void:
 	print(index)
-	blue_player_assign.select(index)
 	if get_tree().is_network_server():
+		_set_blue(index)
 		for id in Network.players:
 			if (id != 1):
-				rpc_id(id, "_on_blue_select", index)
+				rpc_id(id, "_set_blue", index)
+	else:
+		rpc_id(1, "_set_blue", index)
+
+remote func _set_blue(index) -> void:
+	blue_player_assign.select(index)
 	for p in Network.players:
 		if Network.players[p].join_order == index:
 			Network.players[p]["blue"] = true
+			if Gamestate.player_info.net_id == p:
+				Gamestate.player_info.blue = true
 		else:
 			Network.players[p]["blue"] = false
+			if Gamestate.player_info.net_id == p:
+				Gamestate.player_info.blue = false
 	blue_assigned = true
 	if index == 0:
 		blue_assigned = false
 	check_ready()
 
-remote func _on_red_select(index) -> void:
+func _on_red_select(index) -> void:
 	print(index)
-	red_player_assign.select(index)
 	if get_tree().is_network_server():
+		_set_red(index)
 		for id in Network.players:
 			if (id != 1):
 				rpc_id(id, "_on_red_select", index)
+	else:
+		rpc_id(1, "_set_red", index)
+
+remote func _set_red(index) -> void:
+	red_player_assign.select(index)
 	for p in Network.players:
 		if Network.players[p].join_order == index:
 			Network.players[p]["red"] = true
+			if Gamestate.player_info.net_id == p:
+				Gamestate.player_info.red = true
 		else:
 			Network.players[p]["red"] = false
+			if Gamestate.player_info.net_id == p:
+				Gamestate.player_info.red = false
 	red_assigned = true
 	if index == 0:
 		red_assigned = false
@@ -166,16 +184,25 @@ remote func _on_red_select(index) -> void:
 
 remote func _on_green_select(index) -> void:
 	print(index)
-	green_player_assign.select(index)
 	if get_tree().is_network_server():
+		_set_green(index)
 		for id in Network.players:
 			if (id != 1):
-				rpc_id(id, "_on_green_select", index)
+				rpc_id(id, "_on_set_green", index)
+	else:
+		rpc_id(1, "_set_green", index)
+
+remote func _set_green(index) -> void:
+	green_player_assign.select(index)
 	for p in Network.players:
 		if Network.players[p].join_order == index:
 			Network.players[p]["green"] = true
+			if Gamestate.player_info.net_id == p:
+				Gamestate.player_info.green = true
 		else:
 			Network.players[p]["green"] = false
+			if Gamestate.player_info.net_id == p:
+				Gamestate.player_info.green = true
 	green_assigned = true
 	if index == 0:
 		green_assigned = false
@@ -184,3 +211,4 @@ remote func _on_green_select(index) -> void:
 func _unhandled_input(event: InputEvent) -> void: # DEBUGGING
 	if event.is_action_pressed("ui_cancel"):
 		print(Network.players)
+		print(Gamestate.player_info)

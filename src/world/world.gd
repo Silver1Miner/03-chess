@@ -20,7 +20,7 @@ func _ready():
 			if Network.connect("player_removed", self, "_on_player_removed") != OK:
 				push_error("player remove signal connect fail")
 		# display local player name
-		player_name.text = Gamestate.player_info.player_name
+		#player_name.text = Gamestate.player_info.player_name
 		#if (get_tree().is_network_server()):
 		#	spawn_players(Gamestate.player_info, 1)
 		#else:

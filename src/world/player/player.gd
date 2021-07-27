@@ -9,7 +9,6 @@ export var ui_cooldown := 0.1
 
 export var team = "blue" setget set_team
 var cell := Vector2.ZERO setget set_cell
-puppet var repl_cell = Vector2.ZERO
 
 onready var _sprite: Sprite = $Sprite
 onready var _timer: Timer = $Timer
@@ -41,7 +40,8 @@ func _unhandled_input(event) -> void:
 	if Gamestate.is_singleplayer or Gamestate.player_info[team]:
 		if event is InputEventMouseMotion:
 			if grid.is_within_bounds(grid.calculate_grid_coordinates(event.position-board_position)):
-				self.cell = grid.calculate_grid_coordinates(event.position - board_position)
+				warp_cursor(event.position - board_position)
+				#self.cell = grid.calculate_grid_coordinates(event.position - board_position)
 		if event.is_action_pressed("ui_accept") or event.is_action_pressed("left_click"):
 			emit_signal("accept_pressed", cell, team)
 			get_tree().set_input_as_handled()
@@ -54,17 +54,35 @@ func _unhandled_input(event) -> void:
 		if not should_move:
 			return
 		if event.is_action("ui_right"):
-			self.cell += Vector2.RIGHT
+			#self.cell += Vector2.RIGHT
+			move_cursor(Vector2.RIGHT)
 		elif event.is_action("ui_left"):
-			self.cell += Vector2.LEFT
+			#self.cell += Vector2.LEFT
+			move_cursor(Vector2.LEFT)
 		if event.is_action("ui_up"):
-			self.cell += Vector2.UP
+			#self.cell += Vector2.UP
+			move_cursor(Vector2.UP)
 		elif event.is_action("ui_down"):
-			self.cell += Vector2.DOWN
-		if !Gamestate.is_singleplayer:
-			rset("repl_cell", self.cell)
-	else:
-		set_cell(repl_cell)
+			#self.cell += Vector2.DOWN
+			move_cursor(Vector2.DOWN)
+
+remote func warp_cursor(pos) -> void:
+	if !Gamestate.is_singleplayer and get_tree().is_network_server():
+		for id in Network.players:
+			if (id != 1):
+				rpc_id(id, "warp_cursor", pos)
+	self.cell = grid.calculate_grid_coordinates(pos)
+	if !Gamestate.is_singleplayer:
+		rset("cell", cell)
+
+remote func move_cursor(direction: Vector2) -> void:
+	if !Gamestate.is_singleplayer and get_tree().is_network_server():
+		for id in Network.players:
+			if (id != 1):
+				rpc_id(id, "move_cursor", direction)
+	self.cell += direction
+	if !Gamestate.is_singleplayer:
+		rset("cell", cell)
 
 #func _draw() -> void:
 #	draw_rect(Rect2(-grid.cell_size / 2, grid.cell_size), colors[team], false, 2.0)

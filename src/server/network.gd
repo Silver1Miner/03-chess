@@ -98,6 +98,12 @@ remote func register_player(pinfo) -> void:
 		i += 1
 	emit_signal("player_list_changed") # notify that the player list has been changed
 
+remote func update_player() -> void:
+	if get_tree().is_network_server():
+		register_player(Gamestate.player_info)
+	else:
+		rpc_id(1, "register_player", Gamestate.player_info)
+
 remote func unregister_player(id) -> void:
 	print("Removing player ", players[id].player_name, " from internal table")
 	var pinfo = players[id]
