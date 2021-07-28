@@ -31,6 +31,7 @@ var green_in_check := false
 
 signal whose_turn(turn)
 signal endgame_change(endgame_state)
+signal move_log_change(next_move)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -148,7 +149,13 @@ remote func move_from_to(start_cell, end_cell) -> void:
 			rpc_id(1, "move_from_to", start_cell, end_cell)
 	move_from_to_local(start_cell, end_cell)
 
+var xmap = ["a", "b", "c", "d", "e", "f", "g", "h", "i"]
+func translate_to_notation(cell) -> String:
+	return xmap[cell.x] + str(9 - cell.y)
+
 remote func move_from_to_local(start_cell, end_cell) -> void:
+	var next_move = translate_to_notation(start_cell) + "-" + translate_to_notation(end_cell)
+	emit_signal("move_log_change", next_move)
 	board_state[start_cell.x][start_cell.y].move_along_path([start_cell, end_cell])
 	board_display[start_cell.x][start_cell.y] = ""
 	board_display[end_cell.x][end_cell.y] = board_state[start_cell.x][start_cell.y].piece_name
