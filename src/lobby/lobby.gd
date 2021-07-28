@@ -146,9 +146,9 @@ remote func _on_blue_select(index) -> void:
 		for id in Network.players:
 			if (id != 1):
 				rpc_id(id, "_set_blue", index)
+		_set_blue(index)
 	else:
 		rpc_id(1, "_on_blue_select", index)
-	_set_blue(index)
 
 remote func _set_blue(index) -> void:
 	blue_player_assign.select(index)
@@ -175,7 +175,7 @@ remote func _on_red_select(index) -> void:
 				rpc_id(id, "_set_red", index)
 	else:
 		rpc_id(1, "_on_red_select", index)
-	_set_red(index)
+	
 
 remote func _set_red(index) -> void:
 	red_player_assign.select(index)
@@ -202,7 +202,6 @@ remote func _on_green_select(index) -> void:
 				rpc_id(id, "_set_green", index)
 	else:
 		rpc_id(1, "_on_green_select", index)
-	_set_green(index)
 
 remote func _set_green(index) -> void:
 	green_player_assign.select(index)

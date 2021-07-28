@@ -1,11 +1,10 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://src/hud/HUD.tscn" type="PackedScene" id=1]
 [ext_resource path="res://src/world/world.gd" type="Script" id=2]
 [ext_resource path="res://src/world/board/board.tscn" type="PackedScene" id=3]
 [ext_resource path="res://assets/themes/menu.tres" type="Theme" id=4]
 [ext_resource path="res://src/menu/connect_lost.tscn" type="PackedScene" id=5]
-[ext_resource path="res://src/world/board/Grid.tres" type="Resource" id=6]
 
 [node name="world" type="Node2D"]
 script = ExtResource( 2 )
@@ -155,7 +154,6 @@ text = "1"
 
 [node name="board" parent="." instance=ExtResource( 3 )]
 position = Vector2( 64, 64 )
-grid = ExtResource( 6 )
 
 [node name="connect_lost" parent="." instance=ExtResource( 5 )]
 visible = false

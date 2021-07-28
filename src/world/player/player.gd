@@ -72,9 +72,11 @@ remote func warp_cursor(pos) -> void:
 			for id in Network.players:
 				if (id != 1):
 					rpc_id(id, "warp_cursor_local", pos)
+			warp_cursor_local(pos)
 		else:
 			rpc_id(1, "warp_cursor", pos)
-	warp_cursor_local(pos)
+	else:
+		warp_cursor_local(pos)
 
 remote func warp_cursor_local(pos) -> void:
 	self.cell = grid.calculate_grid_coordinates(pos)
@@ -84,10 +86,12 @@ remote func move_cursor(direction: Vector2) -> void:
 		if get_tree().is_network_server():
 			for id in Network.players:
 				if (id != 1):
-					rpc_id(id, "move_cursor", direction)
+					rpc_id(id, "move_cursor_local", direction)
+			move_cursor_local(direction)
 		else:
-			rpc_id(1, "move_cursor_local", direction)
-	move_cursor_local(direction)
+			rpc_id(1, "move_cursor", direction)
+	else:
+		move_cursor_local(direction)
 
 remote func move_cursor_local(direction: Vector2) -> void:
 	self.cell += direction
