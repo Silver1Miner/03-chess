@@ -15,14 +15,16 @@ var blue_ai = false
 var red_ai = false
 var green_ai = false
 
+signal connection_lost
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass
 
-func set_ai() -> void:
-	# ensure no ai in network game
-	if not is_singleplayer:
-		blue_ai = false
-		red_ai = false
-		green_ai = false
-	# ai not supported for network in current builds
+func reset_ai() -> void:
+	blue_ai = false
+	red_ai = false
+	green_ai = false
+
+func lost_connection_to_server() -> void:
+	emit_signal("connection_lost")

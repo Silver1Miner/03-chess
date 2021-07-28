@@ -67,22 +67,30 @@ func _unhandled_input(event) -> void:
 			move_cursor(Vector2.DOWN)
 
 remote func warp_cursor(pos) -> void:
-	if !Gamestate.is_singleplayer and get_tree().is_network_server():
-		for id in Network.players:
-			if (id != 1):
-				rpc_id(id, "warp_cursor", pos)
-	self.cell = grid.calculate_grid_coordinates(pos)
 	if !Gamestate.is_singleplayer:
-		rset("cell", cell)
+		if get_tree().is_network_server():
+			for id in Network.players:
+				if (id != 1):
+					rpc_id(id, "warp_cursor_local", pos)
+		else:
+			rpc_id(1, "warp_cursor", pos)
+	warp_cursor_local(pos)
+
+remote func warp_cursor_local(pos) -> void:
+	self.cell = grid.calculate_grid_coordinates(pos)
 
 remote func move_cursor(direction: Vector2) -> void:
-	if !Gamestate.is_singleplayer and get_tree().is_network_server():
-		for id in Network.players:
-			if (id != 1):
-				rpc_id(id, "move_cursor", direction)
-	self.cell += direction
 	if !Gamestate.is_singleplayer:
-		rset("cell", cell)
+		if get_tree().is_network_server():
+			for id in Network.players:
+				if (id != 1):
+					rpc_id(id, "move_cursor", direction)
+		else:
+			rpc_id(1, "move_cursor_local", direction)
+	move_cursor_local(direction)
+
+remote func move_cursor_local(direction: Vector2) -> void:
+	self.cell += direction
 
 #func _draw() -> void:
 #	draw_rect(Rect2(-grid.cell_size / 2, grid.cell_size), colors[team], false, 2.0)

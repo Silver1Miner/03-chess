@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://src/hud/HUD.tscn" type="PackedScene" id=1]
 [ext_resource path="res://src/world/world.gd" type="Script" id=2]
 [ext_resource path="res://src/world/board/board.tscn" type="PackedScene" id=3]
 [ext_resource path="res://assets/themes/menu.tres" type="Theme" id=4]
+[ext_resource path="res://src/menu/connect_lost.tscn" type="PackedScene" id=5]
 
 [node name="world" type="Node2D"]
 script = ExtResource( 2 )
@@ -45,14 +46,24 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="end_state" type="Label" parent="game_display"]
+[node name="game_state" type="Label" parent="game_display"]
 margin_left = 768.0
 margin_top = 232.0
 margin_right = 908.0
 margin_bottom = 251.0
 text = "game in progress"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="board" parent="." instance=ExtResource( 3 )]
 position = Vector2( 64, 64 )
+
+[node name="connect_lost" parent="." instance=ExtResource( 5 )]
+visible = false
+margin_left = 240.0
+margin_top = 192.0
+margin_right = 1040.0
+margin_bottom = 492.0
 
 [node name="HUD" parent="." instance=ExtResource( 1 )]

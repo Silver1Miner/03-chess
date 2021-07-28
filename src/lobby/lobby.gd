@@ -12,6 +12,8 @@ onready var max_players = $CanvasLayer/lobby_options/Host/server_info/server_opt
 onready var get_ip_button = $CanvasLayer/lobby_options/Host/server_info/get_ip
 
 onready var hud_player_list = $CanvasLayer/lobby_info/player_list
+onready var connect_lost = $CanvasLayer/connect_lost
+onready var leave_lobby = $CanvasLayer/lobby_info/leave_lobby
 
 onready var blue_player_assign = $CanvasLayer/lobby_info/blue_player
 onready var red_player_assign = $CanvasLayer/lobby_info/red_player
@@ -35,6 +37,9 @@ func _ready() -> void:
 		push_error("join signal connect fail")
 	if Network.connect("player_list_changed", self, "_on_player_list_changed") != OK:
 		push_error("player list change signal connect fail")
+	if Gamestate.connect("connection_lost", self, "_on_connection_lost") != OK:
+		push_error("connection signal fail")
+	connect_lost.visible = false
 	if get_ip_button.connect("pressed", self, "_on_get_ip_pressed") != OK:
 		push_error("get ip button connect fail")
 	if create_server_button.connect("pressed", self, "_on_create_server_button_pressed") != OK:
@@ -51,18 +56,24 @@ func _ready() -> void:
 		push_error("select connect fail")
 	if green_player_assign.connect("item_selected", self, "_on_green_select") != OK:
 		push_error("select connect fail")
+	if leave_lobby.connect("pressed", self, "_on_back_button_pressed") != OK:
+		push_error("leave button connect fail")
 	if OS.has_environment("Username"):
 		player_name_edit.text = OS.get_environment("Username")
 	else:
 		player_name_edit.text = "Default Name"
 
 func _on_back_button_pressed() -> void:
+	Network._on_connection_failed()
 	if get_tree().change_scene("res://src/menu/menu.tscn") != OK:
 		push_error("main menu change fail")
 
 func set_player_info() -> void:
 	if (!player_name_edit.text.empty()):
 		Gamestate.player_info.player_name = player_name_edit.text
+
+func _on_connection_lost() -> void:
+	connect_lost.visible = true
 
 remotesync func _on_ready_to_play() -> void:
 	check_ready()
@@ -72,6 +83,8 @@ remote func start_game() -> void:
 		for id in Network.players:
 			if (id != 1):
 				rpc_id(id, "start_game")
+	else:
+		start_game_button.disabled = true
 	if get_tree().change_scene("res://src/world/world.tscn") != OK:
 		push_error("world change fail")
 
@@ -119,18 +132,14 @@ func _on_get_ip_pressed() -> void:
 	if OS.shell_open("https://icanhazip.com/") != OK:
 		push_error("shell open fail")
 
-remote func check_ready() -> void:
-	if get_tree().is_network_server():
-		for id in Network.players:
-			if (id != 1):
-				rpc_id(id, "check_ready")
+func check_ready() -> void:
 	print(Network.players)
-	if red_assigned and blue_assigned and green_assigned:
+	if red_assigned and blue_assigned and green_assigned and get_tree().is_network_server():
 		start_game_button.disabled = false
 	else:
 		start_game_button.disabled = true
 
-func _on_blue_select(index) -> void:
+remote func _on_blue_select(index) -> void:
 	print(index)
 	if get_tree().is_network_server():
 		_set_blue(index)
@@ -138,7 +147,8 @@ func _on_blue_select(index) -> void:
 			if (id != 1):
 				rpc_id(id, "_set_blue", index)
 	else:
-		rpc_id(1, "_set_blue", index)
+		rpc_id(1, "_on_blue_select", index)
+	_set_blue(index)
 
 remote func _set_blue(index) -> void:
 	blue_player_assign.select(index)
@@ -156,15 +166,16 @@ remote func _set_blue(index) -> void:
 		blue_assigned = false
 	check_ready()
 
-func _on_red_select(index) -> void:
+remote func _on_red_select(index) -> void:
 	print(index)
 	if get_tree().is_network_server():
 		_set_red(index)
 		for id in Network.players:
 			if (id != 1):
-				rpc_id(id, "_on_red_select", index)
+				rpc_id(id, "_set_red", index)
 	else:
-		rpc_id(1, "_set_red", index)
+		rpc_id(1, "_on_red_select", index)
+	_set_red(index)
 
 remote func _set_red(index) -> void:
 	red_player_assign.select(index)
@@ -188,9 +199,10 @@ remote func _on_green_select(index) -> void:
 		_set_green(index)
 		for id in Network.players:
 			if (id != 1):
-				rpc_id(id, "_on_set_green", index)
+				rpc_id(id, "_set_green", index)
 	else:
-		rpc_id(1, "_set_green", index)
+		rpc_id(1, "_on_green_select", index)
+	_set_green(index)
 
 remote func _set_green(index) -> void:
 	green_player_assign.select(index)
@@ -202,7 +214,7 @@ remote func _set_green(index) -> void:
 		else:
 			Network.players[p]["green"] = false
 			if Gamestate.player_info.net_id == p:
-				Gamestate.player_info.green = true
+				Gamestate.player_info.green = false
 	green_assigned = true
 	if index == 0:
 		green_assigned = false

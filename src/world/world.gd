@@ -4,11 +4,17 @@ onready var player_name = $HUD/Label
 onready var hud_player_list = $HUD/playerlist
 onready var board = $board
 onready var menu_button = $game_display/menu_button
+onready var game_state_label = $game_display/game_state
 
 export var grid: Resource = preload("res://src/world/board/Grid.tres")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	if Gamestate.connect("connection_lost", self, "_on_connection_lost") != OK:
+		push_error("connection signal fail")
+	if board.connect("endgame_change", self, "_on_endgame_change") != OK:
+		push_error("endgame signal connect fail")
+	$connect_lost.visible = false
 	if board.connect("whose_turn", self, "_on_turn_change") != OK:
 		push_error("turn connect fail")
 	if menu_button.connect("pressed", self, "_on_menu_button_pressed") != OK:
@@ -28,7 +34,15 @@ func _ready():
 	else:
 		spawn_singleplayer()
 
+func _on_connection_lost() -> void:
+	$connect_lost.visible = true
+
+func _on_endgame_change(endgame_state) -> void:
+	game_state_label.text = endgame_state
+
 func _on_menu_button_pressed() -> void:
+	Gamestate.reset_ai()
+	Network._on_connection_failed()
 	if get_tree().change_scene("res://src/menu/menu.tscn") != OK:
 		push_error("main menu change fail")
 

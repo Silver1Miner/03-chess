@@ -47,6 +47,7 @@ func _on_player_disconnected(id) -> void:
 		unregister_player(id)
 		# unregister on all remaining peers
 		rpc("unregister_player", id)
+	Gamestate.lost_connection_to_server()
 
 func _on_disconnected_from_server() -> void:
 	print("Disconnected from server")
@@ -54,6 +55,7 @@ func _on_disconnected_from_server() -> void:
 	players.clear()
 	# reset the player info network ID
 	Gamestate.player_info.net_id = 1
+	Gamestate.lost_connection_to_server()
 
 func join_server(ip, port) -> void:
 	var client = WebSocketClient.new();

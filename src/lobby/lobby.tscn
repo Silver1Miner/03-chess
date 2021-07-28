@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://src/lobby/lobby.gd" type="Script" id=1]
 [ext_resource path="res://assets/themes/menu.tres" type="Theme" id=2]
 [ext_resource path="res://assets/menu_art.png" type="Texture" id=3]
+[ext_resource path="res://src/menu/connect_lost.tscn" type="PackedScene" id=4]
 
 [node name="lobby" type="Control"]
 anchor_right = 1.0
@@ -29,9 +30,9 @@ __meta__ = {
 
 [node name="lobby_options" type="VBoxContainer" parent="CanvasLayer"]
 margin_left = 40.0
-margin_top = 40.0
+margin_top = 50.0
 margin_right = 240.0
-margin_bottom = 648.0
+margin_bottom = 658.0
 theme = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -244,21 +245,22 @@ __meta__ = {
 }
 
 [node name="leave_lobby" type="Button" parent="CanvasLayer/lobby_info"]
-margin_left = 86.4171
-margin_top = 412.486
-margin_right = 195.417
-margin_bottom = 437.486
-text = "Leave Lobby"
+margin_left = 94.4352
+margin_top = 457.922
+margin_right = 379.435
+margin_bottom = 482.922
+text = "Leave Lobby (Return to main menu)"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="start_game" type="Button" parent="CanvasLayer/lobby_info"]
-margin_left = 305.578
-margin_top = 407.141
-margin_right = 405.578
-margin_bottom = 432.141
-text = "Start Game"
+margin_left = 135.416
+margin_top = 405.359
+margin_right = 326.416
+margin_bottom = 430.359
+disabled = true
+text = "Start Game (Host Only)"
 
 [node name="blue_label" type="Label" parent="CanvasLayer/lobby_info"]
 margin_left = 67.7083
@@ -320,6 +322,9 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="connect_lost" parent="CanvasLayer" instance=ExtResource( 4 )]
+visible = false
+
 [node name="back_main" type="Button" parent="CanvasLayer"]
 margin_left = 1027.89
 margin_top = 644.094
@@ -327,6 +332,58 @@ margin_right = 1187.89
 margin_bottom = 669.094
 theme = ExtResource( 2 )
 text = "Back to Main Menu"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="disclaimer1" type="ColorRect" parent="CanvasLayer"]
+margin_left = 250.0
+margin_top = 25.0
+margin_right = 1250.0
+margin_bottom = 85.0
+theme = ExtResource( 2 )
+color = Color( 0, 0, 0, 0.576471 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Disclaimer" type="Label" parent="CanvasLayer/disclaimer1"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -449.5
+margin_top = -9.5
+margin_right = 449.5
+margin_bottom = 9.5
+text = "WARNING: Do not share your ip address with or accept game connections with people you do not know and trust"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="disclaimer2" type="ColorRect" parent="CanvasLayer"]
+margin_left = 52.4533
+margin_top = 632.664
+margin_right = 952.453
+margin_bottom = 692.664
+theme = ExtResource( 2 )
+color = Color( 0, 0, 0, 0.576471 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Disclaimer" type="Label" parent="CanvasLayer/disclaimer2"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -383.0
+margin_top = -20.5
+margin_right = 383.0
+margin_bottom = 20.5
+text = "Disclaimer: This PRODUCT is provided 'As Is' without any express or implied warranty of any kind.
+You are responsible for your own Network security"
+align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }

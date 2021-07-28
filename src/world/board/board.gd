@@ -22,7 +22,7 @@ var currently_attacked_by_blue := []
 var currently_attacked_by_red := []
 var currently_attacked_by_green := []
 
-var endgame_state := "playing"
+var endgame_state := "game in progress"
 var move_log := []
 var current_turn := "blue"
 var blue_in_check := false
@@ -30,6 +30,7 @@ var red_in_check := false
 var green_in_check := false
 
 signal whose_turn(turn)
+signal endgame_change(endgame_state)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -138,10 +139,16 @@ func _on_player_moved(_cell, _team) -> void:
 	pass
 
 remote func move_from_to(start_cell, end_cell) -> void:
-	if !Gamestate.is_singleplayer and get_tree().is_network_server():
-		for id in Network.players:
-			if (id != 1):
-				rpc_id(id, "move_from_to", start_cell, end_cell)
+	if !Gamestate.is_singleplayer:
+		if get_tree().is_network_server():
+			for id in Network.players:
+				if (id != 1):
+					rpc_id(id, "move_from_to_local", start_cell, end_cell)
+		else:
+			rpc_id(1, "move_from_to", start_cell, end_cell)
+	move_from_to_local(start_cell, end_cell)
+
+remote func move_from_to_local(start_cell, end_cell) -> void:
 	board_state[start_cell.x][start_cell.y].move_along_path([start_cell, end_cell])
 	board_display[start_cell.x][start_cell.y] = ""
 	board_display[end_cell.x][end_cell.y] = board_state[start_cell.x][start_cell.y].piece_name
@@ -242,6 +249,7 @@ func next_turn() -> void:
 	emit_signal("whose_turn", current_turn)
 	check()
 	endgame_state = checkmate_stalemate_checker()
+	emit_signal("endgame_change", endgame_state)
 	if current_turn in ai_controlled_teams:
 		ai_turn()
 
@@ -364,7 +372,7 @@ func checkmate_stalemate_checker() -> String:
 					print("stalemate")
 					ai_controlled_teams = []
 					return "stalemate"
-	return "playing"
+	return "game in progress"
 
 func get_all_legal_moves(team) -> Array:
 	var legal_moves = []
