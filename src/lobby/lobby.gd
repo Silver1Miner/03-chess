@@ -10,6 +10,9 @@ onready var server_name = $CanvasLayer/lobby_options/Host/server_info/server_nam
 onready var server_port = $CanvasLayer/lobby_options/Host/server_info/server_options/server_port
 onready var max_players = $CanvasLayer/lobby_options/Host/server_info/server_options/max_players
 onready var get_ip_button = $CanvasLayer/lobby_options/Host/server_info/get_ip
+onready var html_message = $CanvasLayer/lobby_options/Host/html_message
+
+onready var hide_lobby = $CanvasLayer/lobby_info/hide
 
 onready var hud_player_list = $CanvasLayer/lobby_info/player_list
 onready var connect_lost = $CanvasLayer/connect_lost
@@ -29,6 +32,9 @@ func _ready() -> void:
 	if OS.get_name() == "HTML5":
 		create_server_button.disabled = true
 		get_ip_button.disabled = true
+		html_message.visible = true
+	else:
+		html_message.visible = false
 	if Network.connect("server_created", self, "_on_ready_to_play") != OK:
 		push_error("server signal connect fail")
 	if Network.connect("join_success", self, "_on_ready_to_play") != OK:
@@ -73,9 +79,11 @@ func set_player_info() -> void:
 		Gamestate.player_info.player_name = player_name_edit.text
 
 func _on_connection_lost() -> void:
+	hide_lobby.visible = true
 	connect_lost.visible = true
 
 remotesync func _on_ready_to_play() -> void:
+	hide_lobby.visible = false
 	check_ready()
 
 remote func start_game() -> void:

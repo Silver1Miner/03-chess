@@ -148,6 +148,8 @@ remote func move_from_to(start_cell, end_cell) -> void:
 			move_from_to_local(start_cell, end_cell)
 		else:
 			rpc_id(1, "move_from_to", start_cell, end_cell)
+	else:
+		move_from_to_local(start_cell, end_cell)
 
 var xmap = ["a", "b", "c", "d", "e", "f", "g", "h", "i"]
 func translate_to_notation(cell) -> String:

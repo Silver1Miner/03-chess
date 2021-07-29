@@ -21,6 +21,7 @@ __meta__ = {
 [node name="game_display" type="Control" parent="."]
 margin_right = 40.0
 margin_bottom = 40.0
+mouse_filter = 2
 theme = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -64,9 +65,9 @@ margin_bottom = 656.0
 color = Color( 0, 0, 0, 1 )
 
 [node name="move_log" type="RichTextLabel" parent="game_display"]
-margin_left = 800.0
+margin_left = 776.0
 margin_top = 176.0
-margin_right = 992.0
+margin_right = 1024.0
 margin_bottom = 632.0
 __meta__ = {
 "_edit_use_anchors_": false
@@ -161,5 +162,6 @@ margin_left = 240.0
 margin_top = 192.0
 margin_right = 1040.0
 margin_bottom = 492.0
+mouse_filter = 2
 
 [node name="HUD" parent="." instance=ExtResource( 1 )]

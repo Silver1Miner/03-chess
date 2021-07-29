@@ -21,7 +21,7 @@
 [ext_resource path="res://src/world/units/king/king_green.tscn" type="PackedScene" id=19]
 [ext_resource path="res://src/world/board/move_display.tscn" type="PackedScene" id=20]
 [ext_resource path="res://src/world/player/player.tscn" type="PackedScene" id=21]
-[ext_resource path="res://assets/board/marble-board.png" type="Texture" id=22]
+[ext_resource path="res://assets/board/province-board.png" type="Texture" id=22]
 [ext_resource path="res://src/world/board/units.gd" type="Script" id=23]
 [ext_resource path="res://assets/board/river/river3.png" type="Texture" id=24]
 [ext_resource path="res://assets/board/river/river1.png" type="Texture" id=25]
@@ -57,13 +57,13 @@ __meta__ = {
 position = Vector2( 288.6, 192 )
 scale = Vector2( 0.69375, 0.5 )
 frames = SubResource( 1 )
-frame = 1
 playing = true
 
 [node name="jiang" type="AnimatedSprite" parent="."]
 position = Vector2( 287.7, 384 )
 scale = Vector2( 0.693029, 0.5 )
 frames = SubResource( 1 )
+frame = 2
 playing = true
 
 [node name="units" type="Node2D" parent="."]
@@ -183,4 +183,5 @@ position = Vector2( 544, 544 )
 [node name="move_display" parent="." instance=ExtResource( 20 )]
 
 [node name="player" parent="." instance=ExtResource( 21 )]
+visible = false
 position = Vector2( 288, 288 )

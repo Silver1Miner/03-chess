@@ -47,8 +47,10 @@ __meta__ = {
 }
 
 [node name="name" type="VBoxContainer" parent="CanvasLayer/lobby_options/Player"]
-margin_right = 40.0
-margin_bottom = 40.0
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 115.0
+margin_bottom = 62.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -79,8 +81,9 @@ __meta__ = {
 }
 
 [node name="server_info" type="VBoxContainer" parent="CanvasLayer/lobby_options/Host"]
-margin_right = 40.0
-margin_bottom = 40.0
+margin_left = 10.0
+margin_right = 186.0
+margin_bottom = 221.0
 custom_constants/separation = 10
 __meta__ = {
 "_edit_use_anchors_": false
@@ -155,6 +158,16 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="html_message" type="Label" parent="CanvasLayer/lobby_options/Host"]
+visible = false
+margin_top = 230.0
+margin_right = 196.0
+margin_bottom = 249.0
+text = "HTML Cannot Host Games"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Join" type="Panel" parent="CanvasLayer/lobby_options"]
 margin_top = 358.0
 margin_right = 200.0
@@ -165,22 +178,27 @@ __meta__ = {
 }
 
 [node name="join_server" type="VBoxContainer" parent="CanvasLayer/lobby_options/Join"]
-margin_right = 40.0
-margin_bottom = 40.0
+margin_left = 10.0
+margin_top = 20.0
+margin_right = 172.0
+margin_bottom = 124.0
+custom_constants/separation = 10
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Label" type="Label" parent="CanvasLayer/lobby_options/Join/join_server"]
-margin_right = 162.0
+margin_right = 168.0
 margin_bottom = 19.0
 text = "Join Server"
 align = 1
 
 [node name="join_options" type="GridContainer" parent="CanvasLayer/lobby_options/Join/join_server"]
-margin_top = 23.0
-margin_right = 162.0
-margin_bottom = 75.0
+margin_top = 29.0
+margin_right = 168.0
+margin_bottom = 87.0
+custom_constants/vseparation = 10
+custom_constants/hseparation = 10
 columns = 2
 __meta__ = {
 "_edit_use_anchors_": false
@@ -192,29 +210,29 @@ margin_bottom = 19.0
 text = "IP Address"
 
 [node name="Label2" type="Label" parent="CanvasLayer/lobby_options/Join/join_server/join_options"]
-margin_left = 104.0
-margin_right = 162.0
+margin_left = 110.0
+margin_right = 168.0
 margin_bottom = 19.0
 text = "Port"
 
 [node name="ip_address" type="LineEdit" parent="CanvasLayer/lobby_options/Join/join_server/join_options"]
-margin_top = 23.0
+margin_top = 29.0
 margin_right = 100.0
-margin_bottom = 52.0
+margin_bottom = 58.0
 rect_min_size = Vector2( 100, 0 )
 text = "127.0.0.1"
 
 [node name="port" type="LineEdit" parent="CanvasLayer/lobby_options/Join/join_server/join_options"]
-margin_left = 104.0
-margin_top = 23.0
-margin_right = 162.0
-margin_bottom = 52.0
+margin_left = 110.0
+margin_top = 29.0
+margin_right = 168.0
+margin_bottom = 58.0
 text = "4546"
 
 [node name="join_server_button" type="Button" parent="CanvasLayer/lobby_options/Join/join_server"]
-margin_top = 79.0
-margin_right = 162.0
-margin_bottom = 104.0
+margin_top = 97.0
+margin_right = 168.0
+margin_bottom = 122.0
 text = "Join"
 
 [node name="lobby_info" type="Panel" parent="CanvasLayer"]
@@ -321,6 +339,10 @@ text = "green Player"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="hide" type="Panel" parent="CanvasLayer/lobby_info"]
+anchor_right = 1.0
+anchor_bottom = 1.0
 
 [node name="connect_lost" parent="CanvasLayer" instance=ExtResource( 4 )]
 visible = false

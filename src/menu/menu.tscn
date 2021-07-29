@@ -121,9 +121,11 @@ __meta__ = {
 [node name="version" type="Label" parent="."]
 anchor_left = 1.0
 anchor_right = 1.0
-margin_left = -167.0
-margin_bottom = 35.0
-text = "v 0.3.0 Alpha  "
+margin_left = -165.94
+margin_top = -1.05946
+margin_right = 1.05957
+margin_bottom = 33.9405
+text = "v 0.4.0 Beta "
 __meta__ = {
 "_edit_use_anchors_": false
 }
